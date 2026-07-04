@@ -341,13 +341,14 @@
     </footer>
 </body>
 </html> -->
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nikhil's Shop - Home</title>
+    <title>Nikhil's Shop - My Account</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -360,6 +361,7 @@
             --amber: #F2A93B;
             --teal: #1F6F63;
             --paper: #FBF8F3;
+            --rust: #B5482C;
         }
 
         * {
@@ -456,187 +458,190 @@
             border: 2px solid var(--ink);
         }
 
-        /* Hero - diagonal split */
-        .hero {
-            position: relative;
-            background-color: var(--ink);
-            color: var(--paper);
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            min-height: 70vh;
-        }
-
-        .hero-copy {
-            padding: 80px 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            z-index: 2;
-        }
-
-        .hero-copy .tag {
-            color: var(--amber);
-            margin-bottom: 16px;
-        }
-
-        .hero-copy h1 {
-            font-size: 4.5rem;
-            margin: 0 0 20px;
-        }
-
-        .hero-copy p {
-            font-size: 1.15rem;
-            max-width: 460px;
-            color: #D9D5C9;
-            margin-bottom: 36px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: var(--amber);
-            color: var(--ink);
-            text-decoration: none;
-            padding: 14px 28px;
-            font-family: 'IBM Plex Mono', monospace;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            width: fit-content;
-            border: 2px solid var(--amber);
-            transition: all 0.2s;
-        }
-
-        .btn:hover {
-            background-color: transparent;
-            color: var(--amber);
-        }
-
-        .hero-visual {
-            position: relative;
-            background: linear-gradient(160deg, var(--teal), #123832);
-            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
-        }
-
-        .price-tag {
-            position: absolute;
-            background-color: var(--paper);
-            color: var(--ink);
-            border-radius: 6px;
-            padding: 18px 22px;
-            font-family: 'IBM Plex Mono', monospace;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .price-tag::before {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--amber);
-            border-radius: 50%;
-            top: -6px;
-            left: -6px;
-            border: 2px solid var(--ink);
-        }
-
-        .price-tag.t1 {
-            top: 18%;
-            left: 12%;
-            transform: rotate(-6deg);
-        }
-
-        .price-tag.t2 {
-            top: 45%;
-            left: 45%;
-            transform: rotate(4deg);
-        }
-
-        .price-tag.t3 {
-            top: 68%;
-            left: 20%;
-            transform: rotate(-3deg);
-        }
-
-        .price-tag .amt {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--teal);
-        }
-
-        .price-tag .label {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            text-transform: uppercase;
-        }
-
-        /* Aisles / features */
-        .aisles {
+        /* Page header */
+        .page-header {
             max-width: 1200px;
-            margin: 90px auto;
+            margin: 50px auto 30px;
             padding: 0 24px;
-        }
-
-        .aisles-head {
+            border-bottom: 3px solid var(--ink);
+            padding-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            border-bottom: 3px solid var(--ink);
-            padding-bottom: 20px;
-            margin-bottom: 40px;
         }
 
-        .aisles-head h2 {
-            font-size: 2.8rem;
+        .page-header h1 {
+            font-size: 3rem;
         }
 
-        .aisle-grid {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .account-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 0;
-            border: 3px solid var(--ink);
+            grid-template-columns: 250px 1fr;
+            gap: 24px;
+            margin-bottom: 60px;
         }
 
-        .aisle {
-            padding: 32px 28px;
-            border-right: 3px solid var(--ink);
+        .account-sidebar {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 26px;
+            height: fit-content;
+        }
+
+        .account-content {
             background-color: var(--paper);
-            transition: background-color 0.2s;
+            border: 2px solid var(--ink);
+            padding: 32px;
         }
 
-        .aisle:last-child {
-            border-right: none;
+        .user-profile {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .aisle:hover {
+        .user-avatar {
+            width: 90px;
+            height: 90px;
             background-color: var(--amber);
+            border-radius: 0;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--ink);
+            transform: rotate(3deg);
         }
 
-        .aisle .num {
-            font-family: 'IBM Plex Mono', monospace;
-            color: var(--teal);
+        .user-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            margin: 0 0 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .user-email {
+            color: #A9A499;
             font-size: 0.85rem;
-            margin-bottom: 14px;
-            display: block;
+            font-family: 'IBM Plex Mono', monospace;
         }
 
-        .aisle h3 {
-            font-size: 1.6rem;
-            margin: 0 0 10px;
-            text-transform: uppercase;
-        }
-
-        .aisle p {
-            color: #555;
-            font-size: 0.95rem;
-            line-height: 1.5;
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
             margin: 0;
         }
 
-        /* Footer */
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: #D9D5C9;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(242, 169, 59, 0.12);
+            color: var(--amber);
+            border-left: 3px solid var(--amber);
+        }
+
+        .sidebar-menu a.active {
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--teal);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px;
+            border: 2px solid var(--ink);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            background-color: var(--paper);
+        }
+
+        .form-group input:focus {
+            outline: 3px solid var(--amber);
+            outline-offset: -2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .section-title {
+            border-bottom: 3px solid var(--ink);
+            padding-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--ink);
+            color: var(--paper);
+            text-decoration: none;
+            padding: 12px 24px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--ink);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--ink);
+        }
+
+        .btn:hover {
+            background-color: var(--amber);
+            border-color: var(--amber);
+            color: var(--ink);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
         footer {
             background-color: var(--ink);
             color: var(--paper);
@@ -683,27 +688,25 @@
             font-family: 'IBM Plex Mono', monospace;
         }
 
-        @media (max-width: 860px) {
-            .hero {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-visual {
-                clip-path: none;
-                min-height: 280px;
-            }
-
-            .hero-copy {
-                padding: 50px 28px;
-            }
-
-            .hero-copy h1 {
-                font-size: 3rem;
-            }
-
+        @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
                 gap: 14px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .account-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
         }
     </style>
@@ -728,58 +731,72 @@
         </div>
     </nav>
 
-    <section class="hero">
-        <div class="hero-copy">
-            <span class="tag">// Est. for people who hate overpaying</span>
-            <h1>Shop smarter.<br>Not harder.</h1>
-            <p>Thousands of products, honest prices, and delivery that actually shows up on time. This is Nikhil's Shop.
-            </p>
-            <a href="/products" class="btn">Browse the Aisles →</a>
-        </div>
-        <div class="hero-visual">
-            <div class="price-tag t1">
-                <div class="label">Headphones</div>
-                <div class="amt">$59</div>
-            </div>
-            <div class="price-tag t2">
-                <div class="label">Desk Lamp</div>
-                <div class="amt">$24</div>
-            </div>
-            <div class="price-tag t3">
-                <div class="label">Backpack</div>
-                <div class="amt">$38</div>
-            </div>
-        </div>
-    </section>
+    <div class="page-header">
+        <h1>My Account</h1>
+        <span class="tag">Personal info</span>
+    </div>
 
-    <section class="aisles">
-        <div class="aisles-head">
-            <h2>Why shop here</h2>
-            <span class="tag">04 reasons</span>
+    <div class="container">
+        <div class="account-container">
+            <div class="account-sidebar">
+                <div class="user-profile">
+                    <div class="user-avatar">N</div>
+                    <h3 class="user-name">Nikhil User</h3>
+                    <p class="user-email">user@nikhilsshop.com</p>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active">Personal Information</a></li>
+                    <li><a href="#">Address Book</a></li>
+                    <li><a href="#">Payment Methods</a></li>
+                    <li><a href="#">Order History</a></li>
+                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Notifications</a></li>
+                </ul>
+            </div>
+
+            <div class="account-content">
+                <h2 class="section-title">Personal Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" value="Nikhil">
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" value="User">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" value="user@nikhilsshop.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" value="+1 (555) 123-4567">
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" value="1990-01-01">
+                </div>
+
+                <h2 class="section-title">Preferences</h2>
+                <div class="form-group">
+                    <label for="language">Preferred Language</label>
+                    <input type="text" id="language" value="English">
+                </div>
+                <div class="form-group">
+                    <label for="currency">Preferred Currency</label>
+                    <input type="text" id="currency" value="USD">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn">Save Changes</button>
+                    <button class="btn btn-outline">Cancel</button>
+                </div>
+            </div>
         </div>
-        <div class="aisle-grid">
-            <div class="aisle">
-                <span class="num">Aisle 01</span>
-                <h3>Wide Selection</h3>
-                <p>Thousands of products from top brands and exclusive collections, all in one place.</p>
-            </div>
-            <div class="aisle">
-                <span class="num">Aisle 02</span>
-                <h3>Fast Delivery</h3>
-                <p>Express shipping gets your order to your doorstep in record time.</p>
-            </div>
-            <div class="aisle">
-                <span class="num">Aisle 03</span>
-                <h3>Secure Payments</h3>
-                <p>Shop with confidence using encrypted, secure payment gateways.</p>
-            </div>
-            <div class="aisle">
-                <span class="num">Aisle 04</span>
-                <h3>24/7 Support</h3>
-                <p>Our team is always on hand to help with any questions or concerns.</p>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <footer>
         <div class="footer-content">
