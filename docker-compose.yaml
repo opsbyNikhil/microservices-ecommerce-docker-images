@@ -4,7 +4,7 @@ services:
   cart-service:
     build: ./cart-service
     container_name: cart-service
-    port:
+    ports:
       - "5001:80"
     networks:
       - nikhil-network
@@ -13,7 +13,7 @@ services:
   main-service:
     build: ./main-service
     container_name: main-service
-    port:
+    ports:
       - "5002:80"
     networks:
       - nikhil-network
@@ -22,7 +22,7 @@ services:
   order-service:
     build: ./order-service
     container_name: order-service
-    port:
+    ports:
       - "5003:80"
     networks:
       - nikhil-network
@@ -32,7 +32,7 @@ services:
   product-service:
     build: ./product-service
     container_name: product-service
-    port:
+    ports:
       - "5004:80"
     networks:
       - nikhil-network
@@ -41,7 +41,7 @@ services:
   user-service:
     build: ./user-service
     container_name: user-service
-    port:
+    ports:
       - "5004:80"
     networks:
       - nikhil-network
@@ -50,7 +50,7 @@ services:
   nginx:
     image: nginx:1.29
     container_name: nikhil-nginx
-    port:
+    ports:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
