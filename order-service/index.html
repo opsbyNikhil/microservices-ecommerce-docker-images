@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -500,4 +500,676 @@
         </div>
     </footer>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikhil's Shop - My Orders</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #10162B;
+            --parchment: #F6EFE3;
+            --amber: #F2A93B;
+            --teal: #1F6F63;
+            --paper: #FBF8F3;
+            --rust: #B5482C;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--parchment);
+            color: var(--ink);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        .tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Top bar */
+        .topbar {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        /* Nav */
+        nav {
+            background-color: var(--paper);
+            border-bottom: 3px solid var(--ink);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+        }
+
+        .brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .brand span {
+            background-color: var(--amber);
+            color: var(--ink);
+            padding: 2px 8px;
+            font-size: 1.1rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--ink);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            border: 2px solid var(--ink);
+        }
+
+        /* Page header */
+        .page-header {
+            max-width: 1200px;
+            margin: 50px auto 30px;
+            padding: 0 24px;
+            border-bottom: 3px solid var(--ink);
+            padding-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Filters */
+        .order-filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px 24px;
+            border: 2px solid var(--ink);
+            background-color: var(--paper);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-group label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--teal);
+        }
+
+        .filter-group select {
+            padding: 8px 14px;
+            border: 2px solid var(--ink);
+            background-color: var(--paper);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .search-box {
+            flex-grow: 1;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--ink);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--paper);
+        }
+
+        .search-box input:focus {
+            outline: 3px solid var(--amber);
+            outline-offset: -2px;
+        }
+
+        /* Order cards */
+        .order-card {
+            background-color: var(--paper);
+            border: 2px solid var(--ink);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .order-header {
+            padding: 16px 22px;
+            background-color: var(--ink);
+            color: var(--paper);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .order-id {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            color: var(--amber);
+        }
+
+        .order-date {
+            color: #D9D5C9;
+            font-size: 0.9rem;
+            margin-left: 14px;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 5px 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-delivered {
+            background-color: var(--teal);
+            color: var(--paper);
+        }
+
+        .status-shipped {
+            background-color: #2C5F8A;
+            color: var(--paper);
+        }
+
+        .status-processing {
+            background-color: var(--amber);
+            color: var(--ink);
+        }
+
+        .status-cancelled {
+            background-color: var(--rust);
+            color: var(--paper);
+        }
+
+        .order-body {
+            padding: 22px;
+        }
+
+        .order-items {
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+            gap: 16px;
+            padding: 15px 0;
+            border-bottom: 1px solid #E3DCCC;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            background-color: var(--teal);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--paper);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
+
+        .item-details h4 {
+            margin: 0 0 6px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .item-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            color: var(--teal);
+        }
+
+        .item-quantity {
+            color: #777;
+            font-size: 0.85rem;
+            font-family: 'IBM Plex Mono', monospace;
+            margin-top: 5px;
+        }
+
+        .order-summary {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 2px solid var(--ink);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .order-total {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            color: var(--ink);
+        }
+
+        .order-actions {
+            padding: 16px 22px;
+            background-color: var(--parchment);
+            border-top: 2px solid var(--ink);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--ink);
+            color: var(--paper);
+            text-decoration: none;
+            padding: 9px 16px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--ink);
+            transition: all 0.2s;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--ink);
+        }
+
+        .btn:hover {
+            background-color: var(--amber);
+            border-color: var(--amber);
+            color: var(--ink);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 60px;
+            gap: 8px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: var(--paper);
+            border: 2px solid var(--ink);
+            color: var(--ink);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .pagination a.active,
+        .pagination a:hover {
+            background-color: var(--ink);
+            color: var(--paper);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 50px 24px 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 30px;
+        }
+
+        .footer-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #D9D5C9;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--amber);
+        }
+
+        .copyright {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            color: #8A8578;
+            font-size: 0.8rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .order-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .order-item {
+                grid-template-columns: 60px 1fr;
+            }
+
+            .item-price {
+                grid-column: 2;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <span>FREE SHIPPING OVER $50</span>
+        <span>NEED HELP? SUPPORT@NIKHILSSHOP.COM</span>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="brand">NIKHIL'S <span>SHOP</span></a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/products">Products</a>
+                <a href="/cart">Cart</a>
+                <a href="/user">My Account</a>
+                <a href="/orders">My Orders</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1>My Orders</h1>
+        <span class="tag">3 orders</span>
+    </div>
+
+    <div class="container">
+        <div class="order-filters">
+            <div class="filter-group">
+                <label for="status-filter">Status</label>
+                <select id="status-filter">
+                    <option value="all">All Orders</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="processing">Processing</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="time-filter">Time</label>
+                <select id="time-filter">
+                    <option value="all">All Time</option>
+                    <option value="month">Last Month</option>
+                    <option value="6months">Last 6 Months</option>
+                    <option value="year">Last Year</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Search orders...">
+            </div>
+        </div>
+
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <span class="order-id">Order #KA98765</span>
+                    <span class="order-date">Placed on May 15, 2025</span>
+                </div>
+                <span class="order-status status-delivered">Delivered</span>
+            </div>
+            <div class="order-body">
+                <div class="order-items">
+                    <div class="order-item">
+                        <div class="item-image">Image</div>
+                        <div class="item-details">
+                            <h4>Premium Wireless Headphones</h4>
+                            <div class="item-quantity">Qty: 1</div>
+                        </div>
+                        <div class="item-price">$199.99</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="item-image">Image</div>
+                        <div class="item-details">
+                            <h4>Men's Classic Fit T-Shirt</h4>
+                            <div class="item-quantity">Qty: 2</div>
+                        </div>
+                        <div class="item-price">$49.98</div>
+                    </div>
+                </div>
+                <div class="order-summary">
+                    <div>
+                        <div>Items: 3</div>
+                        <div>Delivered on: May 18, 2025</div>
+                    </div>
+                    <div class="order-total">Total: $249.97</div>
+                </div>
+            </div>
+            <div class="order-actions">
+                <button class="btn btn-outline">Track Order</button>
+                <button class="btn btn-outline">Invoice</button>
+                <button class="btn">Buy Again</button>
+            </div>
+        </div>
+
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <span class="order-id">Order #KA87654</span>
+                    <span class="order-date">Placed on May 10, 2025</span>
+                </div>
+                <span class="order-status status-shipped">Shipped</span>
+            </div>
+            <div class="order-body">
+                <div class="order-items">
+                    <div class="order-item">
+                        <div class="item-image">Image</div>
+                        <div class="item-details">
+                            <h4>Electric Coffee Maker</h4>
+                            <div class="item-quantity">Qty: 1</div>
+                        </div>
+                        <div class="item-price">$89.99</div>
+                    </div>
+                </div>
+                <div class="order-summary">
+                    <div>
+                        <div>Items: 1</div>
+                        <div>Expected delivery: May 20, 2025</div>
+                    </div>
+                    <div class="order-total">Total: $89.99</div>
+                </div>
+            </div>
+            <div class="order-actions">
+                <button class="btn btn-outline">Track Order</button>
+                <button class="btn btn-outline">Invoice</button>
+                <button class="btn">Buy Again</button>
+            </div>
+        </div>
+
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <span class="order-id">Order #KA76543</span>
+                    <span class="order-date">Placed on May 5, 2025</span>
+                </div>
+                <span class="order-status status-processing">Processing</span>
+            </div>
+            <div class="order-body">
+                <div class="order-items">
+                    <div class="order-item">
+                        <div class="item-image">Image</div>
+                        <div class="item-details">
+                            <h4>The Art of Programming</h4>
+                            <div class="item-quantity">Qty: 1</div>
+                        </div>
+                        <div class="item-price">$34.99</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="item-image">Image</div>
+                        <div class="item-details">
+                            <h4>Modern Web Development</h4>
+                            <div class="item-quantity">Qty: 1</div>
+                        </div>
+                        <div class="item-price">$42.99</div>
+                    </div>
+                </div>
+                <div class="order-summary">
+                    <div>
+                        <div>Items: 2</div>
+                        <div>Expected processing: May 22, 2025</div>
+                    </div>
+                    <div class="order-total">Total: $77.98</div>
+                </div>
+            </div>
+            <div class="order-actions">
+                <button class="btn btn-outline">Cancel Order</button>
+                <button class="btn btn-outline">Invoice</button>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">Next</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">NIKHIL'S SHOP</div>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">FAQs</a>
+            </div>
+        </div>
+        <p class="copyright">© 2025 NIKHIL'S SHOP. ALL RIGHTS RESERVED.</p>
+    </footer>
+</body>
+
 </html>

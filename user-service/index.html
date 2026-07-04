@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -340,4 +340,460 @@
         </div>
     </footer>
 </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikhil's Shop - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #10162B;
+            --parchment: #F6EFE3;
+            --amber: #F2A93B;
+            --teal: #1F6F63;
+            --paper: #FBF8F3;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--parchment);
+            color: var(--ink);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        .tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Top bar */
+        .topbar {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        /* Nav */
+        nav {
+            background-color: var(--paper);
+            border-bottom: 3px solid var(--ink);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+        }
+
+        .brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .brand span {
+            background-color: var(--amber);
+            color: var(--ink);
+            padding: 2px 8px;
+            font-size: 1.1rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--ink);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            border: 2px solid var(--ink);
+        }
+
+        /* Hero - diagonal split */
+        .hero {
+            position: relative;
+            background-color: var(--ink);
+            color: var(--paper);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            min-height: 70vh;
+        }
+
+        .hero-copy {
+            padding: 80px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .hero-copy .tag {
+            color: var(--amber);
+            margin-bottom: 16px;
+        }
+
+        .hero-copy h1 {
+            font-size: 4.5rem;
+            margin: 0 0 20px;
+        }
+
+        .hero-copy p {
+            font-size: 1.15rem;
+            max-width: 460px;
+            color: #D9D5C9;
+            margin-bottom: 36px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--amber);
+            color: var(--ink);
+            text-decoration: none;
+            padding: 14px 28px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: fit-content;
+            border: 2px solid var(--amber);
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: var(--amber);
+        }
+
+        .hero-visual {
+            position: relative;
+            background: linear-gradient(160deg, var(--teal), #123832);
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .price-tag {
+            position: absolute;
+            background-color: var(--paper);
+            color: var(--ink);
+            border-radius: 6px;
+            padding: 18px 22px;
+            font-family: 'IBM Plex Mono', monospace;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .price-tag::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--amber);
+            border-radius: 50%;
+            top: -6px;
+            left: -6px;
+            border: 2px solid var(--ink);
+        }
+
+        .price-tag.t1 {
+            top: 18%;
+            left: 12%;
+            transform: rotate(-6deg);
+        }
+
+        .price-tag.t2 {
+            top: 45%;
+            left: 45%;
+            transform: rotate(4deg);
+        }
+
+        .price-tag.t3 {
+            top: 68%;
+            left: 20%;
+            transform: rotate(-3deg);
+        }
+
+        .price-tag .amt {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--teal);
+        }
+
+        .price-tag .label {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        /* Aisles / features */
+        .aisles {
+            max-width: 1200px;
+            margin: 90px auto;
+            padding: 0 24px;
+        }
+
+        .aisles-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 3px solid var(--ink);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .aisles-head h2 {
+            font-size: 2.8rem;
+        }
+
+        .aisle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 0;
+            border: 3px solid var(--ink);
+        }
+
+        .aisle {
+            padding: 32px 28px;
+            border-right: 3px solid var(--ink);
+            background-color: var(--paper);
+            transition: background-color 0.2s;
+        }
+
+        .aisle:last-child {
+            border-right: none;
+        }
+
+        .aisle:hover {
+            background-color: var(--amber);
+        }
+
+        .aisle .num {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--teal);
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .aisle h3 {
+            font-size: 1.6rem;
+            margin: 0 0 10px;
+            text-transform: uppercase;
+        }
+
+        .aisle p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 50px 24px 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 30px;
+        }
+
+        .footer-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #D9D5C9;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--amber);
+        }
+
+        .copyright {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            color: #8A8578;
+            font-size: 0.8rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        @media (max-width: 860px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-visual {
+                clip-path: none;
+                min-height: 280px;
+            }
+
+            .hero-copy {
+                padding: 50px 28px;
+            }
+
+            .hero-copy h1 {
+                font-size: 3rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <span>FREE SHIPPING OVER $50</span>
+        <span>NEED HELP? SUPPORT@NIKHILSSHOP.COM</span>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="brand">NIKHIL'S <span>SHOP</span></a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/products">Products</a>
+                <a href="/cart">Cart</a>
+                <a href="/user">My Account</a>
+                <a href="/orders">My Orders</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-copy">
+            <span class="tag">// Est. for people who hate overpaying</span>
+            <h1>Shop smarter.<br>Not harder.</h1>
+            <p>Thousands of products, honest prices, and delivery that actually shows up on time. This is Nikhil's Shop.
+            </p>
+            <a href="/products" class="btn">Browse the Aisles →</a>
+        </div>
+        <div class="hero-visual">
+            <div class="price-tag t1">
+                <div class="label">Headphones</div>
+                <div class="amt">$59</div>
+            </div>
+            <div class="price-tag t2">
+                <div class="label">Desk Lamp</div>
+                <div class="amt">$24</div>
+            </div>
+            <div class="price-tag t3">
+                <div class="label">Backpack</div>
+                <div class="amt">$38</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="aisles">
+        <div class="aisles-head">
+            <h2>Why shop here</h2>
+            <span class="tag">04 reasons</span>
+        </div>
+        <div class="aisle-grid">
+            <div class="aisle">
+                <span class="num">Aisle 01</span>
+                <h3>Wide Selection</h3>
+                <p>Thousands of products from top brands and exclusive collections, all in one place.</p>
+            </div>
+            <div class="aisle">
+                <span class="num">Aisle 02</span>
+                <h3>Fast Delivery</h3>
+                <p>Express shipping gets your order to your doorstep in record time.</p>
+            </div>
+            <div class="aisle">
+                <span class="num">Aisle 03</span>
+                <h3>Secure Payments</h3>
+                <p>Shop with confidence using encrypted, secure payment gateways.</p>
+            </div>
+            <div class="aisle">
+                <span class="num">Aisle 04</span>
+                <h3>24/7 Support</h3>
+                <p>Our team is always on hand to help with any questions or concerns.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">NIKHIL'S SHOP</div>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">FAQs</a>
+            </div>
+        </div>
+        <p class="copyright">© 2025 NIKHIL'S SHOP. ALL RIGHTS RESERVED.</p>
+    </footer>
+</body>
+
 </html>

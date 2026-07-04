@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -450,4 +450,594 @@
         </div>
     </footer>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikhil's Shop - Products</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #10162B;
+            --parchment: #F6EFE3;
+            --amber: #F2A93B;
+            --teal: #1F6F63;
+            --paper: #FBF8F3;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--parchment);
+            color: var(--ink);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        .tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Top bar */
+        .topbar {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        /* Nav */
+        nav {
+            background-color: var(--paper);
+            border-bottom: 3px solid var(--ink);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+        }
+
+        .brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .brand span {
+            background-color: var(--amber);
+            color: var(--ink);
+            padding: 2px 8px;
+            font-size: 1.1rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--ink);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            border: 2px solid var(--ink);
+        }
+
+        /* Page header */
+        .page-header {
+            max-width: 1200px;
+            margin: 50px auto 30px;
+            padding: 0 24px;
+            border-bottom: 3px solid var(--ink);
+            padding-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+        }
+
+        /* Filters */
+        .product-filters {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 2px solid var(--ink);
+            background-color: var(--paper);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+        }
+
+        .filter-group label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--teal);
+        }
+
+        .filter-group select {
+            padding: 8px 14px;
+            border: 2px solid var(--ink);
+            background-color: var(--paper);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .search-box {
+            flex-grow: 1;
+            max-width: 300px;
+            margin: 8px 0;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--ink);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--paper);
+        }
+
+        .search-box input:focus {
+            outline: 3px solid var(--amber);
+            outline-offset: -2px;
+        }
+
+        /* Product grid */
+        .product-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+            padding: 0 24px 70px;
+        }
+
+        .product-card {
+            background-color: var(--paper);
+            border: 2px solid var(--ink);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 6px 6px 0 var(--ink);
+        }
+
+        .product-image {
+            height: 190px;
+            background-color: var(--teal);
+            background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--paper);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-category {
+            display: inline-block;
+            background-color: var(--ink);
+            color: var(--paper);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            margin-bottom: 12px;
+        }
+
+        .product-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin: 8px 0;
+            color: var(--ink);
+        }
+
+        .product-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--teal);
+            margin: 6px 0;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            color: var(--amber);
+            font-size: 0.95rem;
+        }
+
+        .product-rating-text {
+            color: #777;
+            margin-left: 6px;
+            font-size: 0.8rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .product-actions {
+            margin-top: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--ink);
+            color: var(--paper);
+            text-decoration: none;
+            padding: 10px 16px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--ink);
+            transition: all 0.2s;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--amber);
+            border-color: var(--amber);
+            color: var(--ink);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 60px;
+            gap: 8px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: var(--paper);
+            border: 2px solid var(--ink);
+            color: var(--ink);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .pagination a.active,
+        .pagination a:hover {
+            background-color: var(--ink);
+            color: var(--paper);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 50px 24px 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 30px;
+        }
+
+        .footer-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #D9D5C9;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--amber);
+        }
+
+        .copyright {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            color: #8A8578;
+            font-size: 0.8rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .product-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <span>FREE SHIPPING OVER $50</span>
+        <span>NEED HELP? SUPPORT@NIKHILSSHOP.COM</span>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="brand">NIKHIL'S <span>SHOP</span></a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/products">Products</a>
+                <a href="/cart">Cart</a>
+                <a href="/user">My Account</a>
+                <a href="/orders">My Orders</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1>All Products</h1>
+        <span class="tag">8 items</span>
+    </div>
+
+    <div class="product-filters">
+        <div class="filter-group">
+            <label for="category">Category</label>
+            <select id="category">
+                <option value="all">All Categories</option>
+                <option value="electronics">Electronics</option>
+                <option value="clothing">Clothing</option>
+                <option value="home">Home & Kitchen</option>
+                <option value="books">Books</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="sort">Sort By</label>
+            <select id="sort">
+                <option value="popular">Most Popular</option>
+                <option value="newest">Newest</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+            </select>
+        </div>
+        <div class="search-box">
+            <input type="text" placeholder="Search products...">
+        </div>
+    </div>
+
+    <div class="product-grid">
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Electronics</span>
+                <h3 class="product-title">Premium Wireless Headphones</h3>
+                <p class="product-price">$199.99</p>
+                <div class="product-rating">
+                    ★★★★★ <span class="product-rating-text">(128 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Clothing</span>
+                <h3 class="product-title">Men's Classic Fit T-Shirt</h3>
+                <p class="product-price">$24.99</p>
+                <div class="product-rating">
+                    ★★★★☆ <span class="product-rating-text">(86 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Home & Kitchen</span>
+                <h3 class="product-title">Electric Coffee Maker</h3>
+                <p class="product-price">$89.99</p>
+                <div class="product-rating">
+                    ★★★★★ <span class="product-rating-text">(215 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Books</span>
+                <h3 class="product-title">The Art of Programming</h3>
+                <p class="product-price">$34.99</p>
+                <div class="product-rating">
+                    ★★★★☆ <span class="product-rating-text">(42 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Electronics</span>
+                <h3 class="product-title">Smart Watch</h3>
+                <p class="product-price">$149.99</p>
+                <div class="product-rating">
+                    ★★★★☆ <span class="product-rating-text">(97 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Clothing</span>
+                <h3 class="product-title">Women's Running Shoes</h3>
+                <p class="product-price">$79.99</p>
+                <div class="product-rating">
+                    ★★★★★ <span class="product-rating-text">(154 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Home & Kitchen</span>
+                <h3 class="product-title">Air Purifier</h3>
+                <p class="product-price">$129.99</p>
+                <div class="product-rating">
+                    ★★★★☆ <span class="product-rating-text">(76 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">Product Image</div>
+            <div class="product-info">
+                <span class="product-category">Books</span>
+                <h3 class="product-title">Modern Web Development</h3>
+                <p class="product-price">$42.99</p>
+                <div class="product-rating">
+                    ★★★★★ <span class="product-rating-text">(63 reviews)</span>
+                </div>
+                <div class="product-actions">
+                    <a href="/cart" class="btn btn-full">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <a href="#" class="active">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">5</a>
+        <a href="#">Next</a>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">NIKHIL'S SHOP</div>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">FAQs</a>
+            </div>
+        </div>
+        <p class="copyright">© 2025 NIKHIL'S SHOP. ALL RIGHTS RESERVED.</p>
+    </footer>
+</body>
+
 </html>

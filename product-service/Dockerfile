@@ -1,5 +1,3 @@
-FROM ubuntu
-RUN apt update -y
-RUN apt install apache2 -y
-COPY index.html /var/www/html
-CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+FROM nginx:1.29
+COPY index.html /usr/share/nginx/html
+EXPOSE 80
