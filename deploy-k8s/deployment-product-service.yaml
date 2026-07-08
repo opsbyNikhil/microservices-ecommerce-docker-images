@@ -11,7 +11,7 @@ spec:
   selector:
     matchExpressions:
       - key: app
-        opeartor: In
+        operator: In
         values:
           - product-service-app
   strategy:
