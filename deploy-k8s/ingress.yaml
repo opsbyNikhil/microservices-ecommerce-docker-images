@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: dev
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /cart-service
+            pathType: Prefix
+            backend:
+              service:
+                name: cart-service-svc-deployemnt
+              port:
+                number: 80
+          - path: /main-service
+            pathType: Prefix
+            backend:
+              service:
+                name: main-service-svc-deployemnt
+              port:
+                number: 80
+          
+          - path: /order-service
+            pathType: Prefix
+            backend:
+              service:
+                name: order-service-svc-deployemnt
+              port:
+                number: 80
+          
+          - path: /product-service
+            pathType: Prefix
+            backend:
+              service:
+                name: product-service-svc-deployemnt
+              port:
+                number: 80
+          
+          - path: /user-service
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service-svc-deployemnt
+              port:
+                number: 80
+          
