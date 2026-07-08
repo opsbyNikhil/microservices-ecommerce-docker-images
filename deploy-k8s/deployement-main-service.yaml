@@ -37,7 +37,7 @@ spec:
             - containerPort: 80
               protocol: TCP
           resources:
-            request:
+            requests:
               cpu: "150m"
               storage: "100Mi"
             limits: 
