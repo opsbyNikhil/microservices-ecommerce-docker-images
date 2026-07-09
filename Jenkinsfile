@@ -69,5 +69,11 @@ pipeline {
                 sh "aws s3 sync dist/ s3://amaz-s3-nikhil-shop/build-${BUILD_NUMBER}/ --delete"       
             }
         }
+
+        stage ("Docker Image") {
+            steps {
+                sh "docker compose up -d"
+            }
+        }
     }
 }
