@@ -55,9 +55,7 @@ pipeline {
                     credentialsId: "Jenkins-Dist"
                 ]]) {
                         sh """
-                            zip -r build-${BUILD_NUMBER}.zip dist
-                            aws s3 cp build-${BUILD_NUMBER}.zip s3://amaz-s3-nikhil-shop"""
-                        
+                            aws s3 sync dist/ s3://amaz-s3-nikhil-shop/build-${BUILD_NUMBER}/ --delete"""
                 }
             }
         }
