@@ -50,13 +50,7 @@ pipeline {
 
         stage ("Upload dist into S3") {
             steps {
-                withCredentials ([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: "Jenkins-Dist"
-                ]]) {
-                        sh """
-                            aws s3 sync dist/ s3://amaz-s3-nikhil-shop/build-${BUILD_NUMBER}/ --delete"""
-                }
+                sh "aws s3 sync dist/ s3://amaz-s3-nikhil-shop/build-${BUILD_NUMBER}/ --delete"       
             }
         }
     }
