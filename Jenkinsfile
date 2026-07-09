@@ -51,7 +51,7 @@ pipeline {
         stage ("Upload dist into S3") {
             steps {
                 withCredentials ([[
-                    $class: 'AmazonWebServicesCredentailsBinding',
+                    $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: "Jenkins-Dist"
                 ]]) {
                         sh """
