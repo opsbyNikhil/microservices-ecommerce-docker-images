@@ -77,6 +77,9 @@ pipeline {
         // }
 
         stage ("Docker Image push to ECR") {
+            environment {
+                SERVICES = "cart-service main-service  order-service product-service user-service"
+            }
             steps {
                 withCredentials([
                     string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION'),
@@ -87,23 +90,17 @@ pipeline {
                         docker login --username AWS --password-stdin \
                         ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
 
-                    IMAGES="
-                    nikhil-shop-cart-service  
-                    nikhil-shop-main-service   
-                    nikhil-shop-order-service
-                    nikhil-shop-product-service
-                    nikhil-shop-user-service
-                    "
-                    for IMAGE in \$IMAGES
+
+                    for IMAGE in \$SERVICES
                     do 
-                        TAG=\$(echo \$IMAGE | sed 's/nikhil-shop-//')
-                        
+                        IMAGE=nikhil-shop-\$SERVICES
+
                         docker tag \$IMAGE:latest \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$TAG
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$SERVICES
 
                         echo "Pushing \$IMAGE..."
                         docker push \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$TAG
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$SERVICES
                     done
                     """
                 }
