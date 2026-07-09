@@ -53,7 +53,7 @@ pipeline {
                 withCredentials ([string(credentialsId: "SONAR_ID", variable: "SONAR_TOKEN")]){
                 withSonarQubeEnv ("SONAR") {
                     sh """
-                        npx sonar:sonar \
+                        npx sonar-scanner \
                         -Dsonar.projectKey=opsbyNikhil_microservices-ecommerce-docker-images \
                         -Dsonar.organization=opsbynikhil \
                         -Dsonar.host.url=https://sonarcloud.io/ \
