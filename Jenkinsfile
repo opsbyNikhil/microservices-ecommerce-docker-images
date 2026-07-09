@@ -13,6 +13,20 @@ pipeline {
                     branch: "main"
             }
         }
+
+        stage ("Install Dependencies") {
+            steps {
+                sh "npm install"
+            }
+        }
+
+        stage ("Build Application") {
+            steps {
+                sh "npm run build"
+            }
+        }
     }
+
+    
     
 }
