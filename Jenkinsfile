@@ -96,13 +96,14 @@ pipeline {
                     "
                     for IMAGE in \$IMAGES
                     do 
-                        echo "Tagging \$IMAGE..."
+                        TAG=\$(echo \$IMAGE | sed 's/nikhil-shop-//')
+                        
                         docker tag \$IMAGE:latest \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:latest
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$TAG
 
                         echo "Pushing \$IMAGE..."
                         docker push \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:latest
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$TAG
                     done
                     """
                 }
