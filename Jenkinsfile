@@ -51,9 +51,9 @@ pipeline {
         stage ("Sonar-scan") {
             steps {
                 withCredentials ([string(credentialsId: "SONAR_ID", variable: "SONAR_TOKEN")]){
-                withSonarQubeEnv ("SONAR_ID") {
+                withSonarQubeEnv ("SONAR") {
                     sh """
-                        mvn package sonar:sonar \
+                        npx sonar:sonar \
                         -Dsonar.projectKey=opsbyNikhil_microservices-ecommerce-docker-images \
                         -Dsonar.organization=opsbynikhil \
                         -Dsonar.host.url=https://sonarcloud.io/ \
