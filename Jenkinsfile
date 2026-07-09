@@ -83,7 +83,9 @@ pipeline {
                     string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')
                 ]){
                     sh """
-                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
+                        aws ecr get-login-password --region ${AWS_REGION} | \
+                        docker login --username AWS --password-stdin \
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
 
                     IMAGES="
                     nikhil-shop-cart-service  
@@ -95,10 +97,12 @@ pipeline {
                     for IMAGE in $IMAGES
                     do 
                         echo "Tagging $IMAGE..."
-                        docker tag $IMAGE:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
+                        docker tag $IMAGE:latest \
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
 
                         echo "Pushing $IMAGE..."
-                        docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
+                        docker push \
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
     
                     done
                     """
