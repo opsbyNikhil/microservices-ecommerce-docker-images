@@ -14,15 +14,29 @@ pipeline {
             }
         }
 
-        stage ("Install Dependencies") {
+        stage('Install Dependencies') {
             steps {
-                sh "npm install"
+                sh '''
+                    npm install
+                    whoami
+                    pwd
+                    node -v
+                    npm -v
+                    ls -l node_modules/.bin/vite
+                    ls -l node_modules/vite/bin/vite.js
+                '''
             }
         }
 
-        stage ("Build Application") {
+        stage('Build Application') {
             steps {
-                sh "npm run build"
+                sh '''
+                    whoami
+                    pwd
+                    ls -l node_modules/.bin/vite
+                    ./node_modules/.bin/vite --version
+                    npm run build
+                '''
             }
         }
     }
