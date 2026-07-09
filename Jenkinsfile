@@ -94,16 +94,15 @@ pipeline {
                     nikhil-shop-product-service
                     nikhil-shop-user-service
                     "
-                    for IMAGE in $IMAGES
+                    for IMAGE in \$IMAGES
                     do 
-                        echo "Tagging $IMAGE..."
-                        docker tag $IMAGE:latest \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
+                        echo "Tagging \$IMAGE..."
+                        docker tag \$IMAGE:latest \
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:latest
 
-                        echo "Pushing $IMAGE..."
+                        echo "Pushing \$IMAGE..."
                         docker push \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
-    
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:latest
                     done
                     """
                 }
