@@ -70,11 +70,11 @@ pipeline {
             }
         }
 
-        stage ("Docker Image") {
-            steps {
-                sh "docker compose up -d"
-            }
-        }
+        // stage ("Docker Image") {
+        //     steps {
+        //         sh "docker compose up -d"
+        //     }
+        // }
 
         stage ("Docker Image push to ECR") {
             steps {
