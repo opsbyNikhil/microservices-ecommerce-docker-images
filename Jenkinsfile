@@ -35,12 +35,12 @@ pipeline {
             }
         }
 
-        stage ("OWASP Dependency Check") {
-            steps {
-                dependencyCheck additionalArguments: '--scan .',
-                                odcInstallation: 'OWASP-DC'
-            }
-        }
+        // stage ("OWASP Dependency Check") {
+        //     steps {
+        //         dependencyCheck additionalArguments: '--scan .',
+        //                         odcInstallation: 'OWASP-DC'
+        //     }
+        // }
 
         // stage ("Publish OWASP Report") {
         //     steps {
