@@ -34,5 +34,18 @@ pipeline {
                 sh "npm run build"
             }
         }
+
+        stage ("OWASP Dependency Check") {
+            steps {
+                dependencyCheck additionlArguments: '--scan .',
+                                odcinstallation: 'OWASP-DC'
+            }
+        }
+
+        stage ("Publish OWASP Report") {
+            steps {
+                dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
+            }
+        }
     }
 }
