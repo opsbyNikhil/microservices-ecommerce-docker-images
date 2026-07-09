@@ -42,9 +42,23 @@ pipeline {
             }
         }
 
-        stage ("Publish OWASP Report") {
+        // stage ("Publish OWASP Report") {
+        //     steps {
+        //         dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
+        //     }
+        // }
+
+        stage ("Upload dist into S3") {
             steps {
-                dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
+                withCredentials ([[
+                    $class: 'AmazonWebServicesCredentailsBinding',
+                    credentialsId: "Jenkins-Dist"
+                ]]) {
+                        sh """
+                            zip -r build-${BUILD_NUMBER}.zip dist
+                            aws s3 cp build-${BUILD_NUMBER}.zip s3://amaz-s3-nikhil-shop"""
+                        
+                }
             }
         }
     }
