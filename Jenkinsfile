@@ -48,6 +48,22 @@ pipeline {
         //     }
         // }
 
+        stage ("Sonar-scan") {
+            steps {
+                withCredentials ([string(credentailsId: "SONAR_ID", variable: "SONAR_TOKEN")]){
+                withSonarQubeEnv ("SONAR") {
+                    sh """
+                        mvn package sonar:sonar \
+                        -Dsonar.projectKey=opsbyNikhil_microservices-ecommerce-docker-images \
+                        -Dsonar.organization=opsbynikhil \
+                        -Dsonar.host.url=https://sonarcloud.io/ \
+                        -Dsonar.login=${SONAR_TOKEN}
+                        """
+                }    
+                }
+            }
+        }
+
         stage ("Upload dist into S3") {
             steps {
                 sh "aws s3 sync dist/ s3://amaz-s3-nikhil-shop/build-${BUILD_NUMBER}/ --delete"       
