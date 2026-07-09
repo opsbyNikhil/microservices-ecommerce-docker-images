@@ -75,5 +75,30 @@ pipeline {
                 sh "docker compose up -d"
             }
         }
+
+        stage ("Docker Image push to ECR") {
+            steps {
+                sh """
+                    aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
+
+                IMAGES="""
+                nikhil-shop-cart-service  
+                nikhil-shop-main-service   
+                nikhil-shop-order-service
+                nikhil-shop-product-service
+                nikhil-shop-user-service
+                """
+                for IMAGE in $IMAGES
+                do 
+                    echo "Tagging $IMAGE..."
+                    docker tag $IMAGE:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
+
+                    echo "Pushing $IMAGE..."
+                    docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$IMAGE:latest
+ 
+
+                """
+            }
+        }
     }
 }
