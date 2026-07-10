@@ -103,54 +103,71 @@ pipeline {
             }
         }
 
-        // stage ("Docker Image") {
-        //     when {
-        //         expression { !params.SKIP_DOCKER_COMPOSE }
-        //     }
-        //     steps {
-        //         sh "docker compose up -d"
-        //     }
-        // }
+        stage ("Docker Image") {
+            when {
+                expression {
+                    currentBuild.currentResult == null || currentBuild.currentResult == "SUCCESS"
+                }
+            }
+            steps {
+                sh "docker compose build"
+            }
+        }
 
 
-        // stage ("Trivy-Scan") {
-        //     environment {
-        //         SERVICES = "cart-service main-service  order-service product-service user-service"
-        //     }
-        //     steps {
-        //         sh """
-        //             curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -o junit.tpl
+        stage ("Trivy-Scan") {
+            
+            environment {
+                SERVICES = "cart-service main-service  order-service product-service user-service"
+            }
 
-        //             for SERVICE in \$SERVICES
-        //             do
+            steps {
+                sh """
+                    set +e
+                    curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl \
+                    -o junit.tpl
 
-        //                 IMAGE=nikhil-shop-\$SERVICE
+                    for SERVICE in \$SERVICES
+                    do
 
-        //                     # Generate readable xml report
-        //                     trivy image \
-        //                     --scanners vuln \
-        //                     --severity HIGH,CRITICAL \
-        //                     --format template \
-        //                     --template "@junit.tpl" \
-        //                     --exit-code 0 \
-        //                     -o trivy-report-\$SERVICE.xml \
-        //                     \$IMAGE:latest
+                        IMAGE=nikhil-shop-\$SERVICE
 
-        //                     # Generate readable text report
-        //                     trivy image \
-        //                     --scanners vuln \
-        //                     --severity HIGH,CRITICAL \
-        //                     --format table \
-        //                     --exit-code 0 \
-        //                     -o trivy-report-\$SERVICE.txt \
-        //                     \$IMAGE:latest
-        //             done
+                        echo "===================================="
+                        echo "Scanning \$IMAGE"
+                        echo "===================================="
 
-        //             echo "Generated Reports:"
-        //             ls -lh trivy-report-*
-        //         """
-        //     }
-        // }
+                        docker image ispect \$IMAGE:latest >/dev/null 2>&1
+
+                        if [ $? -ne 0 ]; then
+                            echo "\$IMAGE does not exist. Skipping..."
+                            continue
+                        fi
+                    
+                            # Generate readable xml report
+                            trivy image \
+                                --scanners vuln \
+                                --severity HIGH,CRITICAL \
+                                --format template \
+                                --template "@junit.tpl" \
+                                --exit-code 0 \
+                                -o trivy-report-\$SERVICE.xml \
+                                \$IMAGE:latest
+
+                            # Generate readable text report
+                            trivy image \
+                                --scanners vuln \
+                                --severity HIGH,CRITICAL \
+                                --format table \
+                                --exit-code 0 \
+                                -o trivy-report-\$SERVICE.txt \
+                                \$IMAGE:latest
+                    done
+
+                    echo "Generated Reports:"
+                    ls -lh trivy-report-* || true
+                """
+            }
+        }
         
         stage ("Docker Image push to ECR") {
             environment {
@@ -185,11 +202,12 @@ pipeline {
         }
     }
 
-    // post {
-    //     always {
-    //         archiveArtifacts artifacts: 'trivy-report-*.*', fingerprint: true
-    //         junit allowEmptyResults: true, 
-    //             testResults: 'trivy-report-*.xml'
-    //     }
-    // }
+    post {
+        always {
+            archiveArtifacts artifacts: 'trivy-report-*.*', fingerprint: true
+            junit allowEmptyResults: true, 
+                  keepLongStdio: true,
+                  testResults: 'trivy-report-*.xml'
+        }
+    }
 }
