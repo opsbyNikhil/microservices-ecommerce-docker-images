@@ -213,27 +213,34 @@ pipeline {
 
         stage ("Update Deployment") {
             environment {
-                    SERVICES = "cart-service main-service  order-service product-service user-service"
-                }
+                SERVICES = "cart-service main-service order-service product-service user-service"
+            }
+
             steps {
                 withCredentials([
                     string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION'),
                     string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')
-                ]){
+                ]) {
 
-                    dir ("gitops") {
-                        sh """
-                        
-                            for SERVICE in \$SERVICES
-                            do
+                    dir("gitops") {
+                        sh '''
+                        for SERVICE in $SERVICES
+                        do
+                            IMAGE="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/nikhil-shop-$SERVICE:build-'${BUILD_NUMBER}'"
 
-                            sed -i "s|image:.*|      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-\$SERVICE:build-${BUILD_NUMBER}|g" \
-                            deploy-k8s/\$SERVICE/deployment-\$SERVICE.yaml
-                        done                
-                        """
+                            echo "Updating $SERVICE"
+                            echo "$IMAGE"
+
+                            yq -i ".spec.template.spec.containers[0].image = \\"$IMAGE\\"" \
+                            deploy-k8s/$SERVICE/deployment-$SERVICE.yaml
+                        done
+                        echo "=============================="
+                        grep -R "image:" deploy-k8s
+                        echo "=============================="
+                        '''
                     }
                 }
-            }   
+            }
         }
 
         stage ("Push GitOps Repo") {
