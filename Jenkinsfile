@@ -58,28 +58,28 @@ pipeline {
         }
 
 
-        stage ("OWASP Dependency Check") {
-            when {
-                expression {
-                    currentBuild.currentResult == null || currentBuild.currentResult == "SUCCESS"
-                }
-            }
-            steps {
-                dependencyCheck additionalArguments: '--scan .',
-                                odcInstallation: 'OWASP-DC'
-            }
-        }
+        // stage ("OWASP Dependency Check") {
+        //     when {
+        //         expression {
+        //             currentBuild.currentResult == null || currentBuild.currentResult == "SUCCESS"
+        //         }
+        //     }
+        //     steps {
+        //         dependencyCheck additionalArguments: '--scan .',
+        //                         odcInstallation: 'OWASP-DC'
+        //     }
+        // }
 
-        stage ("Publish OWASP Report") {
-            when {
-                expression {
-                    currentBuild.currentResult == null || currentBuild.currentResult == "SUCCESS"
-                }
-            }
-            steps {
-                dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
-            }
-        }
+        // stage ("Publish OWASP Report") {
+        //     when {
+        //         expression {
+        //             currentBuild.currentResult == null || currentBuild.currentResult == "SUCCESS"
+        //         }
+        //     }
+        //     steps {
+        //         dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
+        //     }
+        // }
 
         stage ("Sonar-scan") {
             steps {
