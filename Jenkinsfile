@@ -1,29 +1,31 @@
+parallel jobs
+
 pipeline {
     
     agent {label "Nikhil-Shop"}
     
 
-    parameters {
-        booleanParam (
-            name: 'SKIP_OWASP',
-            defaultValue: true,
-            description: "Skip OWASP Dependenct Check"
-        )
+    // parameters {
+    //     booleanParam (
+    //         name: 'SKIP_OWASP',
+    //         defaultValue: true,
+    //         description: "Skip OWASP Dependenct Check"
+    //     )
 
-        booleanParam (
-            name: 'SKIP_OWASP_REPORT',
-            defaultValue: true,
-            description: "Skip OWASP Dependenct Check"
-        )
+    //     booleanParam (
+    //         name: 'SKIP_OWASP_REPORT',
+    //         defaultValue: true,
+    //         description: "Skip OWASP Dependenct Check"
+    //     )
         
-        booleanParam (
-            name: 'SKIP_DOCKER_COMPOSE',
-            defaultValue: true,
-            description: "Skip OWASP Dependenct Check"
-        )
+    //     booleanParam (
+    //         name: 'SKIP_DOCKER_COMPOSE',
+    //         defaultValue: true,
+    //         description: "Skip OWASP Dependenct Check"
+    //     )
 
 
-    }
+    // }
     triggers {
         pollSCM("* * * * *")
     }
@@ -57,17 +59,12 @@ pipeline {
             }
         }
 
-        stage("Debug Parameters") {
-            steps {
-                echo "SKIP_OWASP=${params.SKIP_OWASP}"
-                echo "SKIP_OWASP_REPORT=${params.SKIP_OWASP_REPORT}"
-                echo "SKIP_DOCKER_COMPOSE=${params.SKIP_DOCKER_COMPOSE}"
-            }
-    }
 
         stage ("OWASP Dependency Check") {
             when {
-                expression { !params.SKIP_OWASP }
+                expression {
+                    currentBuild.currentResult == null || currentBuild.currentResult == "SUCCESS"
+                }
             }
             steps {
                 dependencyCheck additionalArguments: '--scan .',
@@ -77,7 +74,9 @@ pipeline {
 
         stage ("Publish OWASP Report") {
             when {
-                expression { !params.SKIP_OWASP_REPORT }
+                expression {
+                    currentBuild.currentResult == null || currentBuild.currentResult == "SUCCESS"
+                }
             }
             steps {
                 dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
@@ -106,14 +105,14 @@ pipeline {
             }
         }
 
-        stage ("Docker Image") {
-            when {
-                expression { !params.SKIP_DOCKER_COMPOSE }
-            }
-            steps {
-                sh "docker compose up -d"
-            }
-        }
+        // stage ("Docker Image") {
+        //     when {
+        //         expression { !params.SKIP_DOCKER_COMPOSE }
+        //     }
+        //     steps {
+        //         sh "docker compose up -d"
+        //     }
+        // }
 
 
         // stage ("Trivy-Scan") {
