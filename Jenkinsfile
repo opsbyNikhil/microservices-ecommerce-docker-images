@@ -127,14 +127,15 @@ pipeline {
                     for SERVICE in \$SERVICES
                     do
 
-                        IMAGE=nikhil-shop-\$SERVICE
+                        IMAGE=nikhil-shop-${SERVICE}
+
                             trivy image \
                             --scanners vuln \
                             --severity UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL \
                             --format template \
                             --template "@junit.tpl" \
-                            -o trivy-report.xml \
-                            \$IMAGE:latest
+                            -o trivy-${SERVICE}.xml \
+                            ${IMAGE}:latest
                     done
                 """
             }
@@ -178,9 +179,9 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'trivy-report.xml', fingerprint: true
+            archiveArtifacts artifacts: 'trivy-*.xml', fingerprint: true
             junit allowEmptyResults: true, 
-                testResults: 'trivy-report.xml'
+                testResults: 'trivy-*.xml'
         }
     }
 }
