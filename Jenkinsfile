@@ -128,15 +128,29 @@ pipeline {
                     do
 
                         IMAGE=nikhil-shop-\$SERVICE
+
+                            # Generate readable xml report
                             trivy image \
                             --scanners vuln \
                             --severity HIGH,CRITICAL \
                             --format template \
                             --template "@junit.tpl" \
-                            -o trivy-report-\$SERVICE.xml \
                             --exit-code 0 \
+                            -o trivy-report-\$SERVICE.xml \
+                            \$IMAGE:latest
+
+                            # Generate readable text report
+                            trivy image \
+                            --scanners vuln \
+                            --severity HIGH,CRITICAL \
+                            --format table \
+                            --exit-code 0 \
+                            -o trivy-report-\$SERVICE.txt \
                             \$IMAGE:latest
                     done
+
+                    echo "Generated Reports:"
+                    ls -lh trivy-report-*
                 """
             }
         }
@@ -179,7 +193,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'trivy-report-*.xml', fingerprint: true
+            archiveArtifacts artifacts: 'trivy-report-*.*', fingerprint: true
             junit allowEmptyResults: true, 
                 testResults: 'trivy-report-*.xml'
         }
