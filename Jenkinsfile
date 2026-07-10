@@ -116,44 +116,44 @@ pipeline {
         }
 
 
-        stage ("Trivy-Scan") {
-            environment {
-                SERVICES = "cart-service main-service  order-service product-service user-service"
-            }
-            steps {
-                sh """
-                    curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -o junit.tpl
+        // stage ("Trivy-Scan") {
+        //     environment {
+        //         SERVICES = "cart-service main-service  order-service product-service user-service"
+        //     }
+        //     steps {
+        //         sh """
+        //             curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -o junit.tpl
 
-                    for SERVICE in \$SERVICES
-                    do
+        //             for SERVICE in \$SERVICES
+        //             do
 
-                        IMAGE=nikhil-shop-\$SERVICE
+        //                 IMAGE=nikhil-shop-\$SERVICE
 
-                            # Generate readable xml report
-                            trivy image \
-                            --scanners vuln \
-                            --severity HIGH,CRITICAL \
-                            --format template \
-                            --template "@junit.tpl" \
-                            --exit-code 0 \
-                            -o trivy-report-\$SERVICE.xml \
-                            \$IMAGE:latest
+        //                     # Generate readable xml report
+        //                     trivy image \
+        //                     --scanners vuln \
+        //                     --severity HIGH,CRITICAL \
+        //                     --format template \
+        //                     --template "@junit.tpl" \
+        //                     --exit-code 0 \
+        //                     -o trivy-report-\$SERVICE.xml \
+        //                     \$IMAGE:latest
 
-                            # Generate readable text report
-                            trivy image \
-                            --scanners vuln \
-                            --severity HIGH,CRITICAL \
-                            --format table \
-                            --exit-code 0 \
-                            -o trivy-report-\$SERVICE.txt \
-                            \$IMAGE:latest
-                    done
+        //                     # Generate readable text report
+        //                     trivy image \
+        //                     --scanners vuln \
+        //                     --severity HIGH,CRITICAL \
+        //                     --format table \
+        //                     --exit-code 0 \
+        //                     -o trivy-report-\$SERVICE.txt \
+        //                     \$IMAGE:latest
+        //             done
 
-                    echo "Generated Reports:"
-                    ls -lh trivy-report-*
-                """
-            }
-        }
+        //             echo "Generated Reports:"
+        //             ls -lh trivy-report-*
+        //         """
+        //     }
+        // }
         
         stage ("Docker Image push to ECR") {
             environment {
@@ -188,11 +188,11 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            archiveArtifacts artifacts: 'trivy-report-*.*', fingerprint: true
-            junit allowEmptyResults: true, 
-                testResults: 'trivy-report-*.xml'
-        }
-    }
+    // post {
+    //     always {
+    //         archiveArtifacts artifacts: 'trivy-report-*.*', fingerprint: true
+    //         junit allowEmptyResults: true, 
+    //             testResults: 'trivy-report-*.xml'
+    //     }
+    // }
 }
