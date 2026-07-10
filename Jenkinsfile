@@ -2,6 +2,28 @@ pipeline {
     
     agent {label "Nikhil-Shop"}
     
+
+    parameters {
+        booleanParam (
+            name: 'SKIP_OWASP',
+            dwfaultValue: false,
+            description: "Skip OWASP Dependenct Check"
+        )
+
+        booleanParam (
+            name: 'SKIP_OWASP_REPORT',
+            dwfaultValue: false,
+            description: "Skip OWASP Dependenct Check"
+        )
+        
+        booleanParam (
+            name: 'SKIP_DOCKER_COMPOSE',
+            dwfaultValue: false,
+            description: "Skip OWASP Dependenct Check"
+        )
+
+
+    }
     triggers {
         pollSCM("* * * * *")
     }
@@ -35,18 +57,24 @@ pipeline {
             }
         }
 
-        // stage ("OWASP Dependency Check") {
-        //     steps {
-        //         dependencyCheck additionalArguments: '--scan .',
-        //                         odcInstallation: 'OWASP-DC'
-        //     }
-        // }
+        stage ("OWASP Dependency Check") {
+            when {
+                expression { !params.SKIP_OWASP }
+            }
+            steps {
+                dependencyCheck additionalArguments: '--scan .',
+                                odcInstallation: 'OWASP-DC'
+            }
+        }
 
-        // stage ("Publish OWASP Report") {
-        //     steps {
-        //         dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
-        //     }
-        // }
+        stage ("Publish OWASP Report") {
+            when {
+                expression { !params.SKIP_OWASP_REPORT }
+            }
+            steps {
+                dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
+            }
+        }
 
         stage ("Sonar-scan") {
             steps {
@@ -70,12 +98,40 @@ pipeline {
             }
         }
 
-        // stage ("Docker Image") {
-        //     steps {
-        //         sh "docker compose up -d"
-        //     }
-        // }
+        stage ("Docker Image") {
+            when {
+                expression { !params.SKIP_DOCKER_COMPOSE }
+            }
+            steps {
+                sh "docker compose up -d"
+            }
+        }
 
+
+        stage ("Trivy-Scan") {
+            environment {
+                SERVICES = "cart-service main-service  order-service product-service user-service"
+            }
+            steps {
+                sh """
+                    curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -o junit.tpl
+
+                    for SERVICE in \$SERVICES
+                    do
+
+                        IMAGE=nikhil-shop-\$SERVICE
+                            trivy image \
+                            --scanners vuln \
+                            --severity UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL \
+                            --format template \
+                            --template "@junit.tpl" \
+                            -o trivy-report.xml \
+                            \$IMAGE:latest
+                    done
+                """
+            }
+        }
+        
         stage ("Docker Image push to ECR") {
             environment {
                 SERVICES = "cart-service main-service  order-service product-service user-service"
@@ -109,5 +165,14 @@ pipeline {
             }
         }
 
+
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'trivy-report.xml', fingerprint: true
+            junit allowEmptyResults: true, 
+                testResults: 'trivy-report.xml'
+        }
     }
 }
