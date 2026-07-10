@@ -91,21 +91,23 @@ pipeline {
                         ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
 
 
-                    for IMAGE in \$SERVICES
+                    for SERVICE in \$SERVICES
                     do 
-                        IMAGE=nikhil-shop-\$SERVICES
+                        IMAGE=nikhil-shop-\$SERVICE
+
+                        echo "Tagging \$IMAGE"
 
                         docker tag \$IMAGE:latest \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$SERVICES
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:\$SERVICE
 
                         echo "Pushing \$IMAGE..."
                         docker push \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-docker-images:\$SERVICES
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:\$SERVICE
                     done
                     """
                 }
             }
         }
-        
+
     }
 }
