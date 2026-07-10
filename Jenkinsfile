@@ -136,12 +136,11 @@ pipeline {
                         echo "Scanning \$IMAGE"
                         echo "===================================="
 
-                        docker image inspect \$IMAGE:latest >/dev/null 2>&1
-
-                        if [ $? -ne 0 ]; then
+                        if ! docker image inspect \$IMAGE:latest >/dev/null 2>&1; then
                             echo "\$IMAGE does not exist. Skipping..."
                             continue
                         fi
+                       
                     
                             # Generate readable xml report
                             trivy image \
