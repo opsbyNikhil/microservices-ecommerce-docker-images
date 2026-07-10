@@ -6,19 +6,19 @@ pipeline {
     parameters {
         booleanParam (
             name: 'SKIP_OWASP',
-            defaultValue: false,
+            defaultValue: true,
             description: "Skip OWASP Dependenct Check"
         )
 
         booleanParam (
             name: 'SKIP_OWASP_REPORT',
-            defaultValue: false,
+            defaultValue: true,
             description: "Skip OWASP Dependenct Check"
         )
         
         booleanParam (
             name: 'SKIP_DOCKER_COMPOSE',
-            defaultValue: false,
+            defaultValue: true,
             description: "Skip OWASP Dependenct Check"
         )
 
