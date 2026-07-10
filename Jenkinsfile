@@ -124,18 +124,18 @@ pipeline {
                 sh """
                     curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -o junit.tpl
 
-                    for SERVICE in \$SERVICES
+                    for SERVICE in $SERVICES
                     do
 
-                        IMAGE=nikhil-shop-${SERVICE}
+                        IMAGE=nikhil-shop-$SERVICES
 
                             trivy image \
                             --scanners vuln \
                             --severity UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL \
                             --format template \
                             --template "@junit.tpl" \
-                            -o trivy-${SERVICE}.xml \
-                            ${IMAGE}:latest
+                            -o trivy-$SERVICE.xml \
+                            $IMAGE:latest
                     done
                 """
             }
@@ -151,23 +151,23 @@ pipeline {
                     string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')
                 ]){
                     sh """
-                        aws ecr get-login-password --region ${AWS_REGION} | \
+                        aws ecr get-login-password --region $AWS_REGION | \
                         docker login --username AWS --password-stdin \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
+                        $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
 
 
-                    for SERVICE in \$SERVICES
+                    for SERVICE in $SERVICES
                     do 
-                        IMAGE=nikhil-shop-\$SERVICE
+                        IMAGE=nikhil-shop-$SERVICE
 
-                        echo "Tagging \$IMAGE"
+                        echo "Tagging $IMAGE"
 
-                        docker tag \$IMAGE:latest \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:\$SERVICE
+                        docker tag $IMAGE:latest \
+                        $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE:$SERVICE
 
-                        echo "Pushing \$IMAGE..."
+                        echo "Pushing $IMAGE..."
                         docker push \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:\$SERVICE
+                        $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE:$SERVICE
                     done
                     """
                 }
