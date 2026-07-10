@@ -155,40 +155,37 @@ pipeline {
             }
         }
         
-        // stage ("Docker Image push to ECR") {
-        //     environment {
-        //         SERVICES = "cart-service main-service  order-service product-service user-service"
-        //     }
-        //     steps {
-        //         withCredentials([
-        //             string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION'),
-        //             string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')
-        //         ]){
-        //             sh """
-        //                 aws ecr get-login-password --region ${AWS_REGION} | \
-        //                 docker login --username AWS --password-stdin \
-        //                 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
+        stage ("Docker Image push to ECR") {
+            environment {
+                SERVICES = "cart-service main-service  order-service product-service user-service"
+            }
+            steps {
+                withCredentials([
+                    string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION'),
+                    string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')
+                ]){
+                    sh """
+                        aws ecr get-login-password --region ${AWS_REGION} | \
+                        docker login --username AWS --password-stdin \
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
 
 
-        //             for SERVICE in \$SERVICES
-        //             do 
-        //                 IMAGE=nikhil-shop-\$SERVICE
+                    for SERVICE in \$SERVICES
+                    do 
+                        IMAGE=nikhil-shop-\$SERVICE
 
-        //                 echo "Tagging \$IMAGE"
+                        echo "Tagging \$IMAGE eith build-${BUILD_NUMBER}"
+                        docker tag \$IMAGE:latest \
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:build-${BUILD_NUMBER}"
 
-        //                 docker tag \$IMAGE:latest \
-        //                 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:\$SERVICE
-
-        //                 echo "Pushing \$IMAGE..."
-        //                 docker push \
-        //                 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:\$SERVICE
-        //             done
-        //             """
-        //         }
-        //     }
-        // }
-
-
+                        echo "Pushing \$IMAGE:build-${BUILD_NUMBER}"
+                        docker push \
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:build-${BUILD_NUMBER}"
+                    done
+                    """
+                }
+            }
+        }
     }
 
     post {
