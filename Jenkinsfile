@@ -134,7 +134,7 @@ pipeline {
                             --format template \
                             --template "@junit.tpl" \
                             -o trivy-report-\$SERVICE.xml \
-                            --exit-cod 0 \
+                            --exit-code 0 \
                             \$IMAGE:latest
                     done
                 """
