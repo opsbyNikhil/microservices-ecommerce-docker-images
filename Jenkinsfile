@@ -205,6 +205,7 @@ pipeline {
             steps {
                 dir("gitops") {
                     git branch: "main",
+                        credentialsId: "GITHUB_CREDENTIALS",
                         url: "https://github.com/opsbyNikhil/microservices-ecommerce-k8s.git"
                 }
             }
@@ -237,15 +238,29 @@ pipeline {
 
         stage ("Push GitOps Repo") {
             steps {
+                
                 dir ("gitops") {
-                    sh """
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'GITHUB_CREDENTIALS',
+                            usernameVariable: 'GIT_USER',
+                            passwordVariable: 'GIT_TOKEN'
+                        )
+                    ]) {
                     
-                    git config user.name "opsbyNikhil"
-                    git config user.email "purposejob97@gmail.com"
-                    git add .
-                    git commit -m "Updated image to build-${BUILD_NUMBER}" || true
-                    git push origin main
-                    """
+                        sh """
+                        
+                        git config user.name "opsbyNikhil"
+                        git config user.email "purposejob97@gmail.com"
+                        
+                        git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/opsbyNikhil/microservices-ecommerce-k8s.git
+
+                        git add .
+                        git commit -m "Updated image to build-${BUILD_NUMBER}" || true
+
+                        git push origin main
+                        """
+                    }
                 }
             }
         }
