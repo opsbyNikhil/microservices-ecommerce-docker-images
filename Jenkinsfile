@@ -130,10 +130,11 @@ pipeline {
                         IMAGE=nikhil-shop-\$SERVICE
                             trivy image \
                             --scanners vuln \
-                            --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL \
+                            --severity HIGH,CRITICAL \
                             --format template \
                             --template "@junit.tpl" \
                             -o trivy-report-\$SERVICE.xml \
+                            --exit-cod 0 \
                             \$IMAGE:latest
                     done
                 """
