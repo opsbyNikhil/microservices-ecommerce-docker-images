@@ -57,6 +57,14 @@ pipeline {
             }
         }
 
+        stage("Debug Parameters") {
+            steps {
+                echo "SKIP_OWASP=${params.SKIP_OWASP}"
+                echo "SKIP_OWASP_REPORT=${params.SKIP_OWASP_REPORT}"
+                echo "SKIP_DOCKER_COMPOSE=${params.SKIP_DOCKER_COMPOSE}"
+            }
+        }
+
         stage ("OWASP Dependency Check") {
             when {
                 expression { !params.SKIP_OWASP }
