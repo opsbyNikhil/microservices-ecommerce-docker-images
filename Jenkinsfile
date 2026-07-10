@@ -215,18 +215,24 @@ pipeline {
                     SERVICES = "cart-service main-service  order-service product-service user-service"
                 }
             steps {
-                dir ("gitops") {
-                    sh """
-                    
-                        for SERVICE in \$SERVICES
-                        do
+                withCredentials([
+                    string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION'),
+                    string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')
+                ]){
 
-                        sed -i "s|image:.*|      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-\$SERVICE:build-${BUILD_NUMBER}|g" \
-                        deploy-k8s/\$SERVICE/deployment-\$SERVICE.yaml
-                    done                
-                    """
+                    dir ("gitops") {
+                        sh """
+                        
+                            for SERVICE in \$SERVICES
+                            do
+
+                            sed -i "s|image:.*|      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-\$SERVICE:build-${BUILD_NUMBER}|g" \
+                            deploy-k8s/\$SERVICE/deployment-\$SERVICE.yaml
+                        done                
+                        """
+                    }
                 }
-            }
+            }   
         }
 
         stage ("Push GitOps Repo") {
