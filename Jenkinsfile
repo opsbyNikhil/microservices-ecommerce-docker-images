@@ -173,11 +173,11 @@ pipeline {
 
                         echo "Tagging \$IMAGE eith build-${BUILD_NUMBER}"
                         docker tag \$IMAGE:latest \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:build-${BUILD_NUMBER}"
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:build-${BUILD_NUMBER}
 
                         echo "Pushing \$IMAGE:build-${BUILD_NUMBER}"
                         docker push \
-                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:build-${BUILD_NUMBER}"
+                        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/\$IMAGE:build-${BUILD_NUMBER}
                     done
                     """
                 }
