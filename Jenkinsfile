@@ -226,7 +226,7 @@ pipeline {
                         sh '''
                         for SERVICE in $SERVICES
                         do
-                            IMAGE="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/nikhil-shop-$SERVICE:build-'${BUILD_NUMBER}'"
+                            IMAGE="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/nikhil-shop-$SERVICE:build-${BUILD_NUMBER}"
 
                             echo "Updating $SERVICE"
                             echo "$IMAGE"
