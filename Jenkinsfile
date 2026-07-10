@@ -201,6 +201,50 @@ pipeline {
         }
     }
 
+    stage ("Clone GitOps repo") {
+        steps {
+            dir("gitops") {
+                git branch: "main",
+                    url: "https://github.com/opsbyNikhil/microservices-ecommerce-k8s.git"
+            }
+        }
+    }
+
+    stage ("Update Deployment") {
+        environment {
+                SERVICES = "cart-service main-service  order-service product-service user-service"
+            }
+        steps {
+            dir ("gitops") {
+                sh """
+                
+                    for SERVICE in \$SERVICES
+                    do
+
+                    sed -i "s|image:.*|      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nikhil-shop-\$SERVICE:build-${BUILD_NUMBER}|g" \
+                    deploy-k8s/\$SERVICE/deployment-\$SERVICE.yaml
+                done                
+                """
+            }
+        }
+    }
+
+    stage ("Push GitOps Repo") {
+        steps {
+            dir ("gitops") {
+                sh """
+                
+                git config user.name "opsbyNikhil"
+                git config user.email "purposejob97@gmail.com"
+                git add .
+                git commit -m "Updated image to build-${BUILD_NUMBER}" || true
+                git push origin main
+                """
+            }
+        }
+    }
+    
+
     post {
         always {
             archiveArtifacts artifacts: 'trivy-report-*.*', fingerprint: true
