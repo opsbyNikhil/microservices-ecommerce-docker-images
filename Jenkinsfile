@@ -1,5 +1,3 @@
-parallel jobs
-
 pipeline {
     
     agent {label "Nikhil-Shop"}
