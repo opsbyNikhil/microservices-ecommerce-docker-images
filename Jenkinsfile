@@ -116,29 +116,29 @@ pipeline {
         }
 
 
-        // stage ("Trivy-Scan") {
-        //     environment {
-        //         SERVICES = "cart-service main-service  order-service product-service user-service"
-        //     }
-        //     steps {
-        //         sh """
-        //             curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -o junit.tpl
+        stage ("Trivy-Scan") {
+            environment {
+                SERVICES = "cart-service main-service  order-service product-service user-service"
+            }
+            steps {
+                sh """
+                    curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -o junit.tpl
 
-        //             for SERVICE in \$SERVICES
-        //             do
+                    for SERVICE in \$SERVICES
+                    do
 
-        //                 IMAGE=nikhil-shop-\$SERVICE
-        //                     trivy image \
-        //                     --scanners vuln \
-        //                     --severity UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL \
-        //                     --format template \
-        //                     --template "@junit.tpl" \
-        //                     -o trivy-report.xml \
-        //                     \$IMAGE:latest
-        //             done
-        //         """
-        //     }
-        // }
+                        IMAGE=nikhil-shop-\$SERVICE
+                            trivy image \
+                            --scanners vuln \
+                            --severity UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL \
+                            --format template \
+                            --template "@junit.tpl" \
+                            -o trivy-report.xml \
+                            \$IMAGE:latest
+                    done
+                """
+            }
+        }
         
         stage ("Docker Image push to ECR") {
             environment {
