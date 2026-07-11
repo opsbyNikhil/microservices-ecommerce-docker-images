@@ -34,6 +34,11 @@ on:
           description: "Skip Docker Image tag"
           required: true
           default: "false"
+
+        push_ECR:
+          description: "Skip Push ECR"
+          required: true
+          default: "false"
     
 
 jobs:
@@ -79,22 +84,22 @@ jobs:
           aws s3 sync ./dist s3://amaz-s3-nikhil-shop/dist-${{ github.run_number }}/ --delete
 
       - name: Set Image Tag
-        # if: ${{ github.event.inputs.image_tag == 'true' }}
+        if: ${{ github.event.inputs.image_tag == 'true' }}
         run: |
           echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Stop Containers
-        # if: ${{ github.event.inputs.stop_containers == 'true' }}
+        if: ${{ github.event.inputs.stop_containers == 'true' }}
         run: |
           docker compose down
 
       - name: Remove Old Application Image
-        # if: ${{ github.event.inputs.remove_old_image == 'true' }}
+        if: ${{ github.event.inputs.remove_old_image == 'true' }}
         run: |
           docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
 
       - name: Docker Image
-        # if: ${{ github.event.inputs.docker_compose == 'true' }}
+        if: ${{ github.event.inputs.docker_compose == 'true' }}
         run: docker compose up -d --build
 
       - name: Trivy Scan
@@ -140,6 +145,7 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
       - name: Tag and Push Images
+        if: ${{ github.event.inputs.push_ECR == 'true' }}
         run: |
           SERVICES="cart-service main-service order-service product-service user-service"
 
@@ -151,3 +157,16 @@ jobs:
             docker push \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:$IMAGE_TAG 
           done
+
+      - name: kubernetes namespace
+        run: |
+          kubectl create namespace dev
+
+      - name: Switching into namespace
+        run:  |
+          kubectl config set-context --context --namespace dev
+
+      - name: deploy kubernetes
+        run:  |
+          kubectl apply -f ./deploy-k8s
+

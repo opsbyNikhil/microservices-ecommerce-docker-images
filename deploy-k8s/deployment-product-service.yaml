@@ -26,7 +26,7 @@ spec:
         app: product-service-app
     spec:
       containers:
-        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/nikhil-shop-docker-images:product-service
+        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/product-service:v1.0.55
           name: product-service
           imagePullPolicy: Always
           readinessProbe:

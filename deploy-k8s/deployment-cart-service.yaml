@@ -26,7 +26,7 @@ spec:
         app: cart-service-app
     spec:
       containers:
-        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/nikhil-shop-docker-images:cart-service
+        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/cart-service:v1.0.55
           name: cart-service
           imagePullPolicy: Always
           readinessProbe:
