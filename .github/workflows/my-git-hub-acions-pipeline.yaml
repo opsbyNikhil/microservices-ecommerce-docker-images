@@ -60,13 +60,13 @@ jobs:
         run: |
           echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
-      # - name: Stop Containers
-      #   run: |
-      #     docker compose down
+      - name: Stop Containers
+        run: |
+          docker compose down
 
-      # - name: Remove Old Application Image
-      #   run: |
-      #     docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
+      - name: Remove Old Application Image
+        run: |
+          docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
 
       - name: Docker Image
         # if: ${{ github.event.inputs.docker_compose == 'true' }}
@@ -84,7 +84,7 @@ jobs:
           for SERVICE in $SERVICES
           do
 
-            IMAGE=nikhil-shop-$SERVICE:$IMAGE_TAG
+            IMAGE=nikhil-shop-$SERVICE:latest
 
             echo "===================================="
             echo "Scanning \$IMAGE"
