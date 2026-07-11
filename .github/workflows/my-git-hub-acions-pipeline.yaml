@@ -73,9 +73,9 @@ jobs:
         run: |
           aws s3 sync ./dist s3://amaz-s3-nikhil-shop/dist-${{ github.run_number }}/ --delete
 
-      # - name: Set Image Tag
-      #   run: |
-      #     echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Set Image Tag
+        run: |
+          echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Stop Containers
         if: ${{ github.event.inputs.stop_containers == 'true' }}
