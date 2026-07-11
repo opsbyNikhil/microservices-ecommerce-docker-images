@@ -3,6 +3,7 @@ version: '3'
 services:
   cart-service:
     build: ./cart-service
+    image: nikhil-shop-cart-service:${IMAGE_TAG}
     container_name: cart-service
     ports:
       - "5001:80"
@@ -12,6 +13,7 @@ services:
 
   main-service:
     build: ./main-service
+    image: nikhil-shop-main-service:${IMAGE_TAG}
     container_name: main-service
     ports:
       - "5002:80"
@@ -21,6 +23,7 @@ services:
 
   order-service:
     build: ./order-service
+    image: nikhil-shop-order-service:${IMAGE_TAG}
     container_name: order-service
     ports:
       - "5003:80"
@@ -31,6 +34,7 @@ services:
   
   product-service:
     build: ./product-service
+    image: nikhil-shop-product-service:${IMAGE_TAG}
     container_name: product-service
     ports:
       - "5004:80"
@@ -40,6 +44,7 @@ services:
   
   user-service:
     build: ./user-service
+    image: nikhil-shop-user-service:${IMAGE_TAG}
     container_name: user-service
     ports:
       - "5005:80"
