@@ -34,7 +34,16 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - name: Verify NVD API Key
+        run: |
+          if [ -z "$NVD_API_KEY" ]; then
+            echo "NVD API Key is NOT set"
+            exit 1
+          else
+            echo "NVD API Key is set"
+          fi
 
+          
       - name: Download OWASP Dependency Check
         run: |
           VERSION=12.2.2
