@@ -11,9 +11,25 @@ on:
     workflow_dispatch:
       inputs:
         sonarqube-scan:
-          description: "sonar-scan"
+          description: "Skip sonar-scan"
           required: true
           default: "false"
+
+        stop_containers:
+          description: "Skip Stop Containers"
+          required: true
+          default: "false"
+
+        remove_old_image:
+          description: "Skip Remove old Docker Images"
+          required: true
+          default: "false"
+
+        docker_compose:
+          description: "Skip Build Docker Images"
+          required: true
+          default: "false"
+    
 
 jobs:
   build:
@@ -36,7 +52,7 @@ jobs:
         run: npm run build 
 
       - name: Sonar Scan
-        if: ${{ github.event.inputs.sonarqube-scan == 'true' }}
+        # if: ${{ github.event.inputs.sonarqube-scan == 'true' }}
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -57,19 +73,22 @@ jobs:
         run: |
           aws s3 sync ./dist s3://amaz-s3-nikhil-shop/dist-${{ github.run_number }}/ --delete
 
-      - name: Set Image Tag
-        run: |
-          echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
+      # - name: Set Image Tag
+      #   run: |
+      #     echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Stop Containers
+        if: ${{ github.event.inputs.stop_containers == 'true' }}
         run: |
           docker compose down
 
       - name: Remove Old Application Image
+        if: ${{ github.event.inputs.remove_old_image == 'true' }}
         run: |
           docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
 
       - name: Docker Image
+        if: ${{ github.event.inputs.docker_compose == 'true' }}
         run: docker compose up -d --build
 
       - name: Trivy Scan
@@ -121,8 +140,8 @@ jobs:
           for SERVICE in $SERVICES
           do  
             docker tag nikhil-shop-$SERVICE:latest \
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:IMAGE_TAG
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:$IMAGE_TAG
 
             docker push \ 
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:IMAGE_TAG 
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:$IMAGE_TAG 
           done
