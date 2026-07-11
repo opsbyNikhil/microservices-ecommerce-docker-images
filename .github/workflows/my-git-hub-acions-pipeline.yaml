@@ -29,14 +29,16 @@ jobs:
         run: npm run build 
 
       - name: Sonar Scan
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          run: |
-            npx sonar-scanner \
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-            -Dsonar.token=$SONAR_TOKEN
+        with:
+          args: >
+              npx sonar-scanner \
+              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+              -Dsonar.token=$SONAR_TOKEN
 
 
       
