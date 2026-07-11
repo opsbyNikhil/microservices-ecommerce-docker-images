@@ -53,6 +53,10 @@ jobs:
         run: |
           echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
+      - name: Sop Containers
+        run: |
+          docker compose down
+
       - name: Remove Old Application Image
         run: |
           docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
