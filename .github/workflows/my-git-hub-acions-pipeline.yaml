@@ -1,5 +1,8 @@
 name: Nikhil-Shop-Pipeline
 
+env:
+  NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
 on:
   push:
     branch:
@@ -31,6 +34,7 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+
       - name: Download OWASP Dependency Check
         run: |
           VERSION=12.2.2
@@ -50,4 +54,3 @@ jobs:
         with:
           name: OWASP-Report
           path: reports
-          
