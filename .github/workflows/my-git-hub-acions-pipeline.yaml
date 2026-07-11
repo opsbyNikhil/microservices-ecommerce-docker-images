@@ -164,7 +164,7 @@ jobs:
 
       - name: Switching into namespace
         run:  |
-          kubectl config set-context --context --namespace dev
+          kubectl config set-context --current --namespace dev
 
       - name: deploy kubernetes
         run:  |
