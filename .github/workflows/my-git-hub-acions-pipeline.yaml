@@ -47,4 +47,4 @@ jobs:
       
       - name: Upload Dist in S3
         run: |
-          aws s3 sync ./dist s3://amaz-s3-nikhil-shop/dist/ --delete
+          aws s3 sync ./dist s3://amaz-s3-nikhil-shop/dist-${{ github.run_number }}/ --delete
