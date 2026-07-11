@@ -79,22 +79,22 @@ jobs:
           aws s3 sync ./dist s3://amaz-s3-nikhil-shop/dist-${{ github.run_number }}/ --delete
 
       - name: Set Image Tag
-        if: ${{ github.event.inputs.image_tag == 'true' }}
+        # if: ${{ github.event.inputs.image_tag == 'true' }}
         run: |
           echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Stop Containers
-        if: ${{ github.event.inputs.stop_containers == 'true' }}
+        # if: ${{ github.event.inputs.stop_containers == 'true' }}
         run: |
           docker compose down
 
       - name: Remove Old Application Image
-        if: ${{ github.event.inputs.remove_old_image == 'true' }}
+        # if: ${{ github.event.inputs.remove_old_image == 'true' }}
         run: |
           docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
 
       - name: Docker Image
-        if: ${{ github.event.inputs.docker_compose == 'true' }}
+        # if: ${{ github.event.inputs.docker_compose == 'true' }}
         run: docker compose up -d --build
 
       - name: Trivy Scan
