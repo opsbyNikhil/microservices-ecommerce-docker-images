@@ -32,12 +32,12 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
               -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} 
               -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} 
-              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} 
-              -Dsonar.token=$SONAR_TOKEN
+          
 
 
       
