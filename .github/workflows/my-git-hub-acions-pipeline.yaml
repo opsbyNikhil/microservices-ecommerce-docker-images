@@ -8,6 +8,13 @@ on:
     branches:
       - main
 
+    workflow_dispatch:
+      inputs:
+        docker_compose:
+          description: "docker images"
+          required: true
+          default: "false"
+
 jobs:
   build:
     name: Nikhil-Shop
@@ -62,6 +69,7 @@ jobs:
           docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
 
       - name: Docker Image
+        if: ${{ github.event.inputs.docker_compose == 'true' }}
         run: docker compose up -d --build
 
       - name: Trivy Scan
@@ -70,17 +78,20 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl \
             -o junit.tpl
 
-          for SERVICE in \$SERVICES
+          SERVICES="cart-service main-service order-service product-service user-service"
+
+
+          for SERVICE in $SERVICES
           do
 
-            IMAGE=nikhil-shop-\$SERVICE
+            IMAGE=nikhil-shop-$SERVICE:$IMAGE_TAG
 
             echo "===================================="
             echo "Scanning \$IMAGE"
             echo "===================================="
 
-            if ! docker image inspect \$IMAGE:latest >/dev/null 2>&1; then
-                echo "\$IMAGE does not exist. Skipping..."
+            if ! docker image inspect "$IMAGE">/dev/null 2>&1; then
+                echo "$IMAGE does not exist. Skipping..."
                 continue
             fi
                        
@@ -92,8 +103,8 @@ jobs:
                 --format template \
                 --template "@junit.tpl" \
                 --exit-code 0 \
-                -o trivy-report-\$SERVICE.xml \
-                \$IMAGE
+                -o trivy-report-$SERVICE.xml \
+                $IMAGE
             done
 
             echo "Generated Reports:"
