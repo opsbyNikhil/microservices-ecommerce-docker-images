@@ -29,6 +29,11 @@ on:
           description: "Skip Build Docker Images"
           required: true
           default: "false"
+
+        image_tag:
+          description: "Skip Docker Image tag"
+          required: true
+          default: "false"
     
 
 jobs:
@@ -74,6 +79,7 @@ jobs:
           aws s3 sync ./dist s3://amaz-s3-nikhil-shop/dist-${{ github.run_number }}/ --delete
 
       - name: Set Image Tag
+        if: ${{ github.event.inputs.image_tag == 'true' }}
         run: |
           echo "IMAGE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
