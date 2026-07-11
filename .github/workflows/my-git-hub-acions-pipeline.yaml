@@ -47,4 +47,4 @@ jobs:
       
       - name: Upload Dist in S3
         run: |
-          aws cp ./dist s3://amaz-s3-nikhil-shop/dist/ 
+          aws cp ./dist s3://amaz-s3-nikhil-shop/dist/ --delete
