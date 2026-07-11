@@ -8,12 +8,12 @@ on:
     branches:
       - main
 
-    # workflow_dispatch:
-    #   inputs:
-    #     docker_compose:
-    #       description: "docker images"
-    #       required: true
-    #       default: "false"
+    workflow_dispatch:
+      inputs:
+        sonarqube-scan:
+          description: "sonar-scan"
+          required: true
+          default: "false"
 
 jobs:
   build:
@@ -36,6 +36,7 @@ jobs:
         run: npm run build 
 
       - name: Sonar Scan
+        if: ${{ github.event.inputs.sonarqube-scan == 'true' }}
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -69,7 +70,6 @@ jobs:
           docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
 
       - name: Docker Image
-        # if: ${{ github.event.inputs.docker_compose == 'true' }}
         run: docker compose up -d --build
 
       - name: Trivy Scan
@@ -110,6 +110,19 @@ jobs:
             echo "Generated Reports:"
             ls -lh trivy-report-* || true
 
-      # - name: Login to Amazon ECR
-      #   run: | 
-      #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+      - name: Login to Amazon ECR
+        run: | 
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      - name: Tag and Push Images
+        run: |
+          SERVICES="cart-service main-service order-service product-service user-service"
+
+          for SERVICE in $SERVICES
+          do  
+            docker tag nikhil-shop-$SERVICE:latest \
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:IMAGE_TAG
+
+            docker push \ 
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:IMAGE_TAG 
+          done
