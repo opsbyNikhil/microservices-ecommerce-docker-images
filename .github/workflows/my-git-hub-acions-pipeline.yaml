@@ -139,9 +139,9 @@ jobs:
 
           for SERVICE in $SERVICES
           do  
-            docker tag nikhil-shop-$SERVICE:latest \
+            docker tag nikhil-shop-$SERVICE:$IMAGE_TAG \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:$IMAGE_TAG
 
-            docker push \ 
+            docker push \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:$IMAGE_TAG 
           done
