@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           project: OWASP-Report
-          path: reports 
+          path: reports
