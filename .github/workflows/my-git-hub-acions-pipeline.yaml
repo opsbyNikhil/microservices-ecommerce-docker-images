@@ -31,15 +31,15 @@ jobs:
       - name: Sonar Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ SONAR_PROJECT_KEY }} \
-          SONAR_ORGANIZATION: ${{ SONAR_ORGANIZATION }} \
-          SONAR_HOST_URL: ${{ SONAR_HOST_URL }}
-          run: |
-            npx sonar-scanner \
-            -Dsonar.projectKey=${{ SONAR_PROJECT_KEY }} \
-            -Dsonar.organization=${{ SONAR_ORGANIZATION }} \
-            -Dsonar.host.url=${{ SONAR_HOST_URL }}
-            -Dsonar.token=${{ SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }} \
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }} \
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          npx sonar-scanner \
+            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+            -Dsonar.organization=$SONAR_ORGANIZATION \
+            -Dsonar.host.url=$SONAR_HOST_URL
+            -Dsonar.token=$SONAR_TOKEN
 
 
       
