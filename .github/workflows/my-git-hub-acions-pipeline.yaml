@@ -1,0 +1,15 @@
+name: Nikhil-Shop-Pipeline
+
+on:
+  push:
+    branch:
+      - main
+
+jobs:
+  build:
+    name: Nikhil-Shop
+    runs-on: self-hosted
+
+    steps:
+      - name: "Git-checkout"
+        uses: actions/checkout@v6
