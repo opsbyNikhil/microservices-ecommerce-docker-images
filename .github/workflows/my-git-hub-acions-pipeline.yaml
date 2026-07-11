@@ -8,12 +8,12 @@ on:
     branches:
       - main
 
-    workflow_dispatch:
-      inputs:
-        docker_compose:
-          description: "docker images"
-          required: true
-          default: "false"
+    # workflow_dispatch:
+    #   inputs:
+    #     docker_compose:
+    #       description: "docker images"
+    #       required: true
+    #       default: "false"
 
 jobs:
   build:
@@ -69,7 +69,7 @@ jobs:
       #     docker images "nikhil-shop-*" -q | xargs -r docker rmi -f 
 
       - name: Docker Image
-        if: ${{ github.event.inputs.docker_compose == 'true' }}
+        # if: ${{ github.event.inputs.docker_compose == 'true' }}
         run: docker compose up -d --build
 
       - name: Trivy Scan
