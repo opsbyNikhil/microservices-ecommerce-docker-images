@@ -63,3 +63,42 @@ jobs:
 
       - name: Docker Image
         run: docker compose up -d --build
+
+      - name: Trivy Scan
+        run: |
+          set +e
+          curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl \
+            -o junit.tpl
+
+          for SERVICE in \$SERVICES
+          do
+
+            IMAGE=nikhil-shop-\$SERVICE
+
+            echo "===================================="
+            echo "Scanning \$IMAGE"
+            echo "===================================="
+
+            if ! docker image inspect \$IMAGE:latest >/dev/null 2>&1; then
+                echo "\$IMAGE does not exist. Skipping..."
+                continue
+            fi
+                       
+                    
+            # Generate readable xml report
+            trivy image \
+                --scanners vuln \
+                --severity HIGH,CRITICAL \
+                --format template \
+                --template "@junit.tpl" \
+                --exit-code 0 \
+                -o trivy-report-\$SERVICE.xml \
+                \$IMAGE
+            done
+
+            echo "Generated Reports:"
+            ls -lh trivy-report-* || true
+
+      # - name: Login to Amazon ECR
+      #   run: | 
+      #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
