@@ -37,7 +37,18 @@ jobs:
           args: >
               -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} 
               -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }} 
-          
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-sccess-key-id: ${{ secrets.AWS_SECRET_KEY_ID }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Upload Dist in S3
+        run: |
+          aws cp ./dist s3://amaz-s3-nikhil-shop/dist/ 
+
 
 
       
