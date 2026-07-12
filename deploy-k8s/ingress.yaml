@@ -9,7 +9,8 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
-    - http:
+    - host: mysitedesign.site
+      http: 
         paths:
           - path: /cart-service
             pathType: Prefix
