@@ -158,13 +158,13 @@ jobs:
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$SERVICE:$IMAGE_TAG 
           done
 
-      - name: kubernetes namespace
-        run: |
-          kubectl create namespace dev
+      # - name: kubernetes namespace
+      #   run: |
+      #     kubectl create namespace dev
 
-      - name: Switching into namespace
-        run:  |
-          kubectl config set-context --current --namespace dev
+      # - name: Switching into namespace
+      #   run:  |
+      #     kubectl config set-context --current --namespace dev
 
       - name: deploy kubernetes
         run:  |
