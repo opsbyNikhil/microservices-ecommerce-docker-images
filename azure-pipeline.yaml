@@ -1,0 +1,37 @@
+trigger:
+  - main
+
+pool: Default
+
+variables:
+  nodeVersion: '22'
+
+stages:
+  - stage: Build
+    displayName: Buils stage
+    jobs:
+      - job: Build
+        displayName:  Build Vite Application
+        steps:
+
+          - task: UseNode@1
+            inputs:
+              version:  $(nodeVersion)
+            displayName:  Install Node.js
+
+          - script: |
+              node -v
+              npm -v
+            displayName: verify Node & NPM
+          
+          - script: |
+              npm ci
+            displayName: 'Install Dependencies'
+          
+          - script: |
+              npm run build
+            displayName:  'Build Project'
+          
+          - publish: dist
+            artifact: vite-build
+            displayName:  Publish Build Artifact
