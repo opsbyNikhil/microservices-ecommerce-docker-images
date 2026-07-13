@@ -35,3 +35,9 @@ stages:
           - publish: dist
             artifact: vite-build
             displayName:  Publish Build Artifact
+          
+          - script: |
+              npm run lint
+            displayName: Run ESLint
+
+          
