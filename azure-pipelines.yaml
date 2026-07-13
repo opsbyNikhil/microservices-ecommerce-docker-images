@@ -16,7 +16,7 @@ stages:
         displayName:  Build Vite Application
         steps:
 
-          - task: UseNode@1
+          - task: NodeTool@0
             inputs:
               version:  $(nodeVersion)
             displayName:  Install Node.js
@@ -50,7 +50,7 @@ stages:
               scannerMode: 'CLI'
               configMode: 'manual'
               cliProjectKey: '$(Sonar-Projectkey)'
-              cliProjectName: '$(Sonar-Projectname)
+              cliProjectName: '$(Sonar-Projectname)'
               cliSources: '.'
             
           - task: SonarCloudAnalyze@3
@@ -59,4 +59,4 @@ stages:
           - task: SonarCloudPublish@3
             displayName:  'Publish Quality Gate'
             inputs:
-              pollingTimeoitSec:  '300'
+              pollingTimeoutSec:  '300'
