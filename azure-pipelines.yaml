@@ -60,3 +60,4 @@ stages:
             displayName:  'Publish Quality Gate'
             inputs:
               pollingTimeoutSec:  '300'
+              
