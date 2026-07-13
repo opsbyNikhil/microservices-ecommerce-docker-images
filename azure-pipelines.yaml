@@ -4,7 +4,9 @@ trigger:
 pool: Default
 
 variables:
-  nodeVersion: '22'
+  - group: Nikhil-Shop-Sonar-Credentails
+
+    nodeVersion: '22'
 
 stages:
   - stage: Build
@@ -39,5 +41,22 @@ stages:
           - script: |
               npm run lint
             displayName: Run ESLint
-
           
+          - task: SonarCloudPrepare@3
+            displayName: Sonar Cloud Analysis
+            inputs:
+              SonarCloud: 'Sonar'
+              organization: '$(Sonar-Organization)'
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: '$(Sonar-Projectkey)'
+              cliProjectName: '$(Sonar-Projectname)
+              cliSources: '.'
+            
+          - task: SonarCloudAnalyze@3
+            displayName:  'Run SonarCloud Analysis'
+          
+          - task: SonarCloudPublish@3
+            displayName:  'Publish Quality Gate'
+            inputs:
+              pollingTimeoitSec:  '300'
