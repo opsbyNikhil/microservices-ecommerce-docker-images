@@ -5,8 +5,8 @@ pool: Default
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
-
-    nodeVersion: '22'
+  - name: nodeVersion
+    value: '22'
 
 stages:
   - stage: Build
