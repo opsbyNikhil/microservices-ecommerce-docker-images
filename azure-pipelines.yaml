@@ -16,7 +16,7 @@ stages:
         displayName:  Build Vite Application
         steps:
 
-          - task: NodeTool@0
+          - task: UseNode@01
             inputs:
               version:  $(nodeVersion)
             displayName:  Install Node.js
@@ -60,4 +60,3 @@ stages:
             displayName:  'Publish Quality Gate'
             inputs:
               pollingTimeoutSec:  '300'
-              
