@@ -3,6 +3,18 @@ trigger:
 
 pool: Default
 
+parameters:
+  - name: remove image & container
+    displayName: Stop and remove comtainers
+    type: string
+    default: true
+
+  - name: Docker Compose
+    displayName: Docker Compose Up
+    type: string
+    default: true
+
+
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
 
@@ -67,11 +79,16 @@ stages:
             inputs:
               pollingTimeoutSec:  '300'
 
-          - script: |
-              docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
+          - task: Bash@3
+            condition: eq('${{ parameters.remove image & container }}', true)
             displayName: "Stop and remove comtainers"
+            inputs:
+              targetType: 'inline'
+              script: |
+                docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
 
           - task: DockerCompose@1
+            condition:  eq('${{ parameters.Docker Compose }}', true)
             displayName: 'Docker Compose Up'
             inputs:
               dockerComposeFile:  '**/docker-compose.yaml'
@@ -80,12 +97,47 @@ stages:
               buildImages: true
               projectName: 'nikhil-shop'
           
+          - task: Bash@3
+            displayName: "Trivy Scan Docker Images"
+            inputs:
+              targetType: "inline"
+              script: |
+                SERVICES="cart-service main-service order-service product-service user-service"
+
+                mkdir -p trivy-reports
+
+                for SERVICE in $SERVICES
+                do
+                  IMAGE="nikhil-shop-$SERVICE:$(IMAGE_TAG)"
+
+                  echo "==================================="
+                  echo "Scanning $IMAGE"
+                  echo "==================================="
+
+                  trivy image \
+                    --severity HIGH,CRITICAL \
+                    --ignore-unfixed \
+                    --format table \
+                    --output trivy-reports/$SERVICE.xml \
+                    "$IMAGE"
+                  done
+          
+          - task: PublishBuildArtifacts@1
+            displayName:  "Publish Trivy Reports"
+            inputs:
+              pathtoPublish: "trivy-reports"
+              ArtifactName: "Trivy-Reports"
+
           - script: |
               export AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)
               export AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)
               export AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION)
               aws sts get-caller-identity
             displayName: "Verify AWS Credentials"
+
+          # - script: |
+          #   displayName:  'Login to Amazon ECR'
+
             
 
 
