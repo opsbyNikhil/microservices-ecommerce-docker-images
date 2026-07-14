@@ -15,8 +15,8 @@ parameters:
 
   - name: image_tag
     displayName: Docker Image Tag
-    type: boolean
-    default: latest
+    type: string
+    default: ""
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
@@ -25,7 +25,7 @@ variables:
     value: "22"
 
   - name: IMAGE_TAG
-    value: "${{ parameters.image_tag }}"
+    value: "v1.0.$(Build.BuildId)"
 
   - group: AWS-CREDENTIALS
 
@@ -110,7 +110,7 @@ stages:
 
                 for SERVICE in $SERVICES
                 do
-                  IMAGE="nikhil-shop-$SERVICE:"${{ parameters.image_tag }}""
+                  IMAGE="nikhil-shop-$SERVICE:$(IMAGE_TAG)"
 
                   echo "==================================="
                   echo "Scanning $IMAGE"
