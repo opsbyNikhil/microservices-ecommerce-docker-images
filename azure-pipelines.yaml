@@ -71,4 +71,3 @@ stages:
               detached: true
               buildImages: true
               projectName: 'nikhil-shop'
-
