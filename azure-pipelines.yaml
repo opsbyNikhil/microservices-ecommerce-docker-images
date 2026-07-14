@@ -5,10 +5,14 @@ pool: Default
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
+
   - name: nodeVersion
     value: '22'
+  
   - name: IMAGE_TAG
     value: 'v1.0.$(Build.BuildId)'
+  
+  - group: AWS-CREDENTIALS
 
 stages:
   - stage: Build
@@ -63,6 +67,10 @@ stages:
             inputs:
               pollingTimeoutSec:  '300'
 
+          - script: |
+              docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
+            displayName: "Stop and remove comtainers"
+
           - task: DockerCompose@1
             displayName: 'Docker Compose Up'
             inputs:
@@ -71,3 +79,14 @@ stages:
               detached: true
               buildImages: true
               projectName: 'nikhil-shop'
+          
+          - script: |
+              aws sts get-caller-identity
+            displayName: "Verify AWS Credentials"
+            env:
+              AWS_ACCESS_KEY_ID:$(AWS_ACCESS_KEY_ID)
+              AWS_SECRET_ACCESS_KEY:$(AWS_SECRET_ACCESS_KEY)
+              AWS_DEFAULT_REGION:$(AWS_DEFAULT_REGION)
+            
+
+
