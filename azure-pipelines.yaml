@@ -171,14 +171,14 @@ stages:
 
                   docker tag \
                     nikhil-shop-$SERVICE:$(IMAGE_TAG) \
-                    $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/nikhil-shop-$SERVICE:$(IMAGE_TAG)
+                    $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/$SERVICE:$(IMAGE_TAG)
 
                   echo "========================"
                   echo "Pushing $SERVICE"
                   echo "========================"
 
                   docker push \
-                  $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/nikhil-shop-$SERVICE:$(IMAGE_TAG)
+                  $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/$SERVICE:$(IMAGE_TAG)
 
                 done
                 
