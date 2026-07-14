@@ -4,26 +4,25 @@ trigger:
 pool: Default
 
 parameters:
-  - name: remove image & container
+  - name: remove_image_container
     displayName: Stop and remove comtainers
-    type: string
+    type: boolean
     default: true
 
-  - name: Docker Compose
+  - name: docker_compose
     displayName: Docker Compose Up
-    type: string
+    type: boolean
     default: true
-
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
 
   - name: nodeVersion
-    value: '22'
-  
+    value: "22"
+
   - name: IMAGE_TAG
-    value: 'v1.0.$(Build.BuildId)'
-  
+    value: "v1.0.$(Build.BuildId)"
+
   - group: AWS-CREDENTIALS
 
 stages:
@@ -31,72 +30,71 @@ stages:
     displayName: Buils stage
     jobs:
       - job: Build
-        displayName:  Build Vite Application
+        displayName: Build Vite Application
         steps:
-
           - task: UseNode@01
             inputs:
-              version:  $(nodeVersion)
-            displayName:  Install Node.js
+              version: $(nodeVersion)
+            displayName: Install Node.js
 
           - script: |
               node -v
               npm -v
             displayName: verify Node & NPM
-          
+
           - script: |
               npm ci
-            displayName: 'Install Dependencies'
-          
+            displayName: "Install Dependencies"
+
           - script: |
               npm run build
-            displayName:  'Build Project'
-          
+            displayName: "Build Project"
+
           - publish: dist
             artifact: vite-build
-            displayName:  Publish Build Artifact
-          
+            displayName: Publish Build Artifact
+
           - script: |
               npm run lint
             displayName: Run ESLint
-          
+
           - task: SonarCloudPrepare@3
             displayName: Sonar Cloud Analysis
             inputs:
-              SonarCloud: 'Sonar'
-              organization: '$(Sonar-Organization)'
-              scannerMode: 'CLI'
-              configMode: 'manual'
-              cliProjectKey: '$(Sonar-Projectkey)'
-              cliProjectName: '$(Sonar-Projectname)'
-              cliSources: '.'
-            
+              SonarCloud: "Sonar"
+              organization: "$(Sonar-Organization)"
+              scannerMode: "CLI"
+              configMode: "manual"
+              cliProjectKey: "$(Sonar-Projectkey)"
+              cliProjectName: "$(Sonar-Projectname)"
+              cliSources: "."
+
           - task: SonarCloudAnalyze@3
-            displayName:  'Run SonarCloud Analysis'
-          
+            displayName: "Run SonarCloud Analysis"
+
           - task: SonarCloudPublish@3
-            displayName:  'Publish Quality Gate'
+            displayName: "Publish Quality Gate"
             inputs:
-              pollingTimeoutSec:  '300'
+              pollingTimeoutSec: "300"
 
           - task: Bash@3
-            condition: eq('${{ parameters.remove image & container }}', true)
+            condition: eq(${{ parameters.remove_image_container }}, true)
             displayName: "Stop and remove comtainers"
             inputs:
-              targetType: 'inline'
+              targetType: "inline"
               script: |
                 docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
 
           - task: DockerCompose@1
-            condition:  eq('${{ parameters.Docker Compose }}', true)
-            displayName: 'Docker Compose Up'
+            condition: eq(${{ parameters.docker_compose }}, true)
+            displayName: "Docker Compose Up"
             inputs:
-              dockerComposeFile:  '**/docker-compose.yaml'
-              action:  'run services'
+              dockerComposeFile: "**/docker-compose.yaml"
+              action: "run services"
               detached: true
               buildImages: true
-              projectName: 'nikhil-shop'
-          
+              projectName: "nikhil-shop"
+
           - task: Bash@3
             displayName: "Trivy Scan Docker Images"
             inputs:
@@ -121,9 +119,9 @@ stages:
                     --output trivy-reports/$SERVICE.xml \
                     "$IMAGE"
                   done
-          
+
           - task: PublishBuildArtifacts@1
-            displayName:  "Publish Trivy Reports"
+            displayName: "Publish Trivy Reports"
             inputs:
               pathtoPublish: "trivy-reports"
               ArtifactName: "Trivy-Reports"
@@ -137,7 +135,3 @@ stages:
 
           # - script: |
           #   displayName:  'Login to Amazon ECR'
-
-            
-
-
