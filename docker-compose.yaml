@@ -1,64 +1,124 @@
 version: '3'
 
 services:
+
+  mysql:
+    image: mysql:8.4
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports: 
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 30s
+      timeout:  10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - ecommerce-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   cart-service:
     build: ./cart-service
     image: nikhil-shop-cart-service:${IMAGE_TAG}
     container_name: cart-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
     ports:
       - "5001:80"
     networks:
-      - nikhil-network
-    restart: always
+      - ecommerce-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   main-service:
     build: ./main-service
     image: nikhil-shop-main-service:${IMAGE_TAG}
     container_name: main-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
     ports:
       - "5002:80"
     networks:
-      - nikhil-network
-    restart: always
+      - ecommerce-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   order-service:
     build: ./order-service
     image: nikhil-shop-order-service:${IMAGE_TAG}
     container_name: order-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
     ports:
       - "5003:80"
     networks:
-      - nikhil-network
-    restart: always
-  
+      - ecommerce-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
   
   product-service:
     build: ./product-service
     image: nikhil-shop-product-service:${IMAGE_TAG}
     container_name: product-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
     ports:
       - "5004:80"
     networks:
-      - nikhil-network
-    restart: always
-  
+      - ecommerce-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   user-service:
     build: ./user-service
     image: nikhil-shop-user-service:${IMAGE_TAG}
     container_name: user-service
+    restart: unless-stopped
+    depends_on:
+      - mysql
     ports:
       - "5005:80"
     networks:
-      - nikhil-network
-    restart: always
-  
+      - ecommerce-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   nginx:
     image: nginx:1.29
     container_name: nikhil-nginx
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - main-service
       - product-service
@@ -66,11 +126,12 @@ services:
       - cart-service
       - order-service
     networks:
-      - nikhil-network
-    restart: always
+      - ecommerce-network
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
 
 networks:
-  nikhil-network:
+  ecommerce-network:
     driver: bridge
-
-
