@@ -62,9 +62,11 @@ stages:
               pollingTimeoutSec:  '300'
 
           - task: DockerCompose@1
+            displayName: 'Docker Compose Up'
             inputs:
               dockerComposeFile:  '**/docker-compose.yaml'
               action:  'run services'
               detached: true
               buildImages: true
+              projectName: 'nikhil-shop'
 
