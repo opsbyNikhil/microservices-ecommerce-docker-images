@@ -16,7 +16,7 @@ parameters:
   - name: image_tag
     displayName: Docker Image Tag
     type: string
-    default: ""
+    default: "latest"
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
