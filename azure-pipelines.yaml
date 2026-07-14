@@ -6,17 +6,17 @@ parameters:
   - name: remove_image_container
     displayName: Stop and remove comtainers
     type: boolean
-    default: true
+    default: false
 
   - name: docker_compose
     displayName: Docker Compose Up
     type: boolean
-    default: true
+    default: false
 
   - name: image_tag
     displayName: Docker Image Tag
     type: string
-    default: ""
+    default: "v1.0.234"
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
