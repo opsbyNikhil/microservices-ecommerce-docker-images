@@ -25,6 +25,7 @@ variables:
     value: "22"
 
   - name: IMAGE_TAG
+    condition: and(succeeded(), ${{ parameters.image_tag }})
     value: "v1.0.$(Build.BuildId)"
 
   - group: AWS-CREDENTIALS
