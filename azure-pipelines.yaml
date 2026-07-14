@@ -17,7 +17,7 @@ parameters:
   - name: image_tag
     displayName: Docker Image Tag
     type: string
-    default: "v1.0.234"
+    default: "v1.0.239"
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
@@ -25,8 +25,8 @@ variables:
   - name: nodeVersion
     value: "22"
 
-  - name: IMAGE_TAG
-    value: "v1.0.$(Build.BuildId)"
+  # - name: IMAGE_TAG
+  #   value: "v1.0.$(Build.BuildId)"
 
   - group: AWS-CREDENTIALS
 
@@ -83,7 +83,7 @@ stages:
               pollingTimeoutSec: "300"
 
           - task: Bash@3
-            # condition: and(succeeded(), ${{ parameters.remove_image_container }})
+            condition: and(succeeded(), ${{ parameters.remove_image_container }})
             displayName: "Stop and remove comtainers"
             inputs:
               targetType: "inline"
@@ -91,7 +91,7 @@ stages:
                 docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
 
           - task: DockerCompose@1
-            # condition: and(succeeded(), ${{ parameters.docker_compose }})
+            condition: and(succeeded(), ${{ parameters.docker_compose }})
             displayName: "Docker Compose Up"
             inputs:
               dockerComposeFile: "**/docker-compose.yaml"
@@ -138,5 +138,43 @@ stages:
               aws sts get-caller-identity
             displayName: "Verify AWS Credentials"
 
-          # - script: |
-          #   displayName:  'Login to Amazon ECR'
+          - script: |
+            displayName:  'Login to Amazon ECR'
+              aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \ 
+              docker login \
+                --username AWS \
+                --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
+
+          - script: |
+              displayName: "Tag & Pushing the docker Image to Amazon ECR"
+              SERVICES="cart-service main-service order-service product-service user-service"
+
+              for SERVICE in $SERVICES
+              do 
+              
+                echo "======================="
+                echo "Tagging $SERVICE"
+                echo "======================="
+
+                docker tag \
+                  nikhil-shop-$SERVICE:$(IMAGE_TAG) \
+                  $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/nikhil-shop-$SERVICE:$(IMAGE_TAG)
+
+                echo "========================"
+                echo "Pushing $SERVICE"
+                echo "========================"
+
+                docker push \
+                $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/nikhil-shop-$SERVICE:$(IMAGE_TAG)
+
+              done
+            env:
+              AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+              AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+              AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
+            
+
+
+
+
+            
