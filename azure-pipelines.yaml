@@ -13,6 +13,11 @@ parameters:
     type: boolean
     default: true
 
+  - name: image_tag
+    displayName: Docker Image Tag
+    type: boolean
+    default: latest
+
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
 
@@ -20,7 +25,7 @@ variables:
     value: "22"
 
   - name: IMAGE_TAG
-    value: "v1.0.$(Build.BuildId)"
+    value: "${{ parameters.image_tag }}"
 
   - group: AWS-CREDENTIALS
 
