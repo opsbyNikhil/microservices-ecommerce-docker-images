@@ -28,7 +28,7 @@ variables:
   # - name: IMAGE_TAG
   #   value: "v1.0.$(Build.BuildId)"
 
-  - ${{ if eq(parameter.image_tag, '') }}:
+  - ${{ if eq(parameters.image_tag, '') }}:
     - name: IMAGE_TAG
       value: "v1.0.$(Build.BuildId)"
   - ${{ else }}:
