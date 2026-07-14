@@ -138,41 +138,47 @@ stages:
               aws sts get-caller-identity
             displayName: "Verify AWS Credentials"
 
-          - script: |
+          - task: Bash@3
             displayName:  'Login to Amazon ECR'
-              aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \ 
-              docker login \
-                --username AWS \
-                --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
+            inputs:
+              targetType: 'inline'
+              script: |
+                aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \ 
+                docker login \
+                  --username AWS \
+                  --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
 
-          - script: |
-              displayName: "Tag & Pushing the docker Image to Amazon ECR"
-              SERVICES="cart-service main-service order-service product-service user-service"
+          - task: Bash@3
+            displayName: "Tag & Pushing the docker Image to Amazon ECR"
+            inputs:
+              targetType: 'inline'
+              script: |
+                SERVICES="cart-service main-service order-service product-service user-service"
 
-              for SERVICE in $SERVICES
-              do 
+                for SERVICE in $SERVICES
+                do 
               
-                echo "======================="
-                echo "Tagging $SERVICE"
-                echo "======================="
+                  echo "======================="
+                  echo "Tagging $SERVICE"
+                  echo "======================="
 
-                docker tag \
-                  nikhil-shop-$SERVICE:$(IMAGE_TAG) \
+                  docker tag \
+                    nikhil-shop-$SERVICE:$(IMAGE_TAG) \
+                    $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/nikhil-shop-$SERVICE:$(IMAGE_TAG)
+
+                  echo "========================"
+                  echo "Pushing $SERVICE"
+                  echo "========================"
+
+                  docker push \
                   $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/nikhil-shop-$SERVICE:$(IMAGE_TAG)
 
-                echo "========================"
-                echo "Pushing $SERVICE"
-                echo "========================"
-
-                docker push \
-                $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/nikhil-shop-$SERVICE:$(IMAGE_TAG)
-
-              done
+                done
             env:
-              AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
-              AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-              AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
-            
+                AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+                AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+                AWS_DEFAULT_REGION: $(AWS_DEFAULT_REGION)
+  
 
 
 
