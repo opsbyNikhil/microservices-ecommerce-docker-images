@@ -1,4 +1,5 @@
-trigger: none
+trigger: 
+  - main
 
 pool: Default
 
@@ -25,7 +26,6 @@ variables:
     value: "22"
 
   - name: IMAGE_TAG
-    condition: and(succeeded(), ${{ parameters.image_tag }})
     value: "v1.0.$(Build.BuildId)"
 
   - group: AWS-CREDENTIALS
@@ -83,7 +83,7 @@ stages:
               pollingTimeoutSec: "300"
 
           - task: Bash@3
-            condition: and(succeeded(), ${{ parameters.remove_image_container }})
+            # condition: and(succeeded(), ${{ parameters.remove_image_container }})
             displayName: "Stop and remove comtainers"
             inputs:
               targetType: "inline"
@@ -91,7 +91,7 @@ stages:
                 docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
 
           - task: DockerCompose@1
-            condition: and(succeeded(), ${{ parameters.docker_compose }})
+            # condition: and(succeeded(), ${{ parameters.docker_compose }})
             displayName: "Docker Compose Up"
             inputs:
               dockerComposeFile: "**/docker-compose.yaml"
