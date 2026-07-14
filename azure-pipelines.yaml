@@ -110,7 +110,7 @@ stages:
 
                 for SERVICE in $SERVICES
                 do
-                  IMAGE="nikhil-shop-$SERVICE:$(IMAGE_TAG)"
+                  IMAGE="nikhil-shop-$SERVICE:"${{ parameters.image_tag }}""
 
                   echo "==================================="
                   echo "Scanning $IMAGE"
