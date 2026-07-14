@@ -1,5 +1,5 @@
 trigger:
-  - main
+  - []
 
 pool: Default
 
@@ -27,7 +27,7 @@ variables:
 
 stages:
   - stage: Build
-    displayName: Buils stage
+    displayName: Build stage
     jobs:
       - job: Build
         displayName: Build Vite Application
@@ -78,7 +78,7 @@ stages:
               pollingTimeoutSec: "300"
 
           - task: Bash@3
-            condition: eq(${{ parameters.remove_image_container }}, true)
+            condition: and(succeeded(), ${{ parameters.remove_image_container }}, true)
             displayName: "Stop and remove comtainers"
             inputs:
               targetType: "inline"
@@ -86,7 +86,7 @@ stages:
                 docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
 
           - task: DockerCompose@1
-            condition: eq(${{ parameters.docker_compose }}, true)
+            condition: and(succeeded(), ${{ parameters.docker_compose }}, true)
             displayName: "Docker Compose Up"
             inputs:
               dockerComposeFile: "**/docker-compose.yaml"
@@ -116,7 +116,7 @@ stages:
                     --severity HIGH,CRITICAL \
                     --ignore-unfixed \
                     --format table \
-                    --output trivy-reports/$SERVICE.xml \
+                    --output trivy-reports/$SERVICE.txt \
                     "$IMAGE"
                   done
 
