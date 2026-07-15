@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/change-cause: "Deploy user service"
 spec:
   minReadySeconds: 3
-  replicas:[]
+  replicas: 3
   selector:
     matchExpressions:
       - key: app
