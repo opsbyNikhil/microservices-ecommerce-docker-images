@@ -18,6 +18,12 @@ parameters:
     displayName: Docker Image Tag
     type: string
     default: "v1.0.239"
+  
+  - name: create_namespace
+    displayName: Create Namespace
+    type: boolean
+    default: false
+
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
@@ -188,6 +194,7 @@ stages:
 
           - task: Bash@3
             displayName: "Create Namespace"
+            condition: and(succeeded(), ${{ parameters.create_namespace }})
             inputs:
               targetType: "inline"
               script: |
