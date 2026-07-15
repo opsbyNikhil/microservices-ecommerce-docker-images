@@ -1,4 +1,238 @@
-trigger: 
+# trigger:
+#   - main
+
+# pool: Default
+
+# parameters:
+#   - name: remove_image_container
+#     displayName: Stop and remove comtainers
+#     type: boolean
+#     default: false
+
+#   - name: docker_compose
+#     displayName: Docker Compose Up
+#     type: boolean
+#     default: false
+
+#   - name: image_tag
+#     displayName: Docker Image Tag
+#     type: string
+#     default: "v1.0.239"
+
+#   - name: create_namespace
+#     displayName: Create Namespace
+#     type: boolean
+#     default: false
+
+#   - name: set_namespace
+#     displayName: Set Namespace
+#     type: boolean
+#     default: false
+
+#   - name: Deploy_k8s
+#     displayName: Deployment in Kubernetes
+#     type: boolean
+#     default: false
+
+# variables:
+#   - group: Nikhil-Shop-Sonar-Credentails
+
+#   - name: nodeVersion
+#     value: "22"
+
+#   # - name: IMAGE_TAG
+#   #   value: "v1.0.$(Build.BuildId)"
+
+#   - ${{ if eq(parameters.image_tag, '') }}:
+#     - name: IMAGE_TAG
+#       value: "v1.0.$(Build.BuildId)"
+#   - ${{ else }}:
+#     - name: IMAGE_TAG
+#       value: "${{ parameters.image_tag }}"
+
+#   - group: AWS-CREDENTIALS
+
+# stages:
+#   - stage: Build
+#     displayName: Build stage
+#     jobs:
+#       - job: Build
+#         displayName: Build Vite Application
+#         steps:
+#           - task: UseNode@01
+#             inputs:
+#               version: $(nodeVersion)
+#             displayName: Install Node.js
+
+#           - script: |
+#               node -v
+#               npm -v
+#             displayName: verify Node & NPM
+
+#           - script: |
+#               npm ci
+#             displayName: "Install Dependencies"
+
+#           - script: |
+#               npm run build
+#             displayName: "Build Project"
+
+#           - publish: dist
+#             artifact: vite-build
+#             displayName: Publish Build Artifact
+
+#           - script: |
+#               npm run lint
+#             displayName: Run ESLint
+
+#           - task: SonarCloudPrepare@3
+#             displayName: Sonar Cloud Analysis
+#             inputs:
+#               SonarCloud: "Sonar"
+#               organization: "$(Sonar-Organization)"
+#               scannerMode: "CLI"
+#               configMode: "manual"
+#               cliProjectKey: "$(Sonar-Projectkey)"
+#               cliProjectName: "$(Sonar-Projectname)"
+#               cliSources: "."
+
+#           - task: SonarCloudAnalyze@3
+#             displayName: "Run SonarCloud Analysis"
+
+#           - task: SonarCloudPublish@3
+#             displayName: "Publish Quality Gate"
+#             inputs:
+#               pollingTimeoutSec: "300"
+
+#           - task: Bash@3
+#             condition: and(succeeded(), ${{ parameters.remove_image_container }})
+#             displayName: "Stop and remove comtainers"
+#             inputs:
+#               targetType: "inline"
+#               script: |
+#                 docker compose -f docker-compose.yaml -p nikhil-shop down --rmi all
+
+#           - task: DockerCompose@1
+#             condition: and(succeeded(), ${{ parameters.docker_compose }})
+#             displayName: "Docker Compose Up"
+#             inputs:
+#               dockerComposeFile: "**/docker-compose.yaml"
+#               action: "run services"
+#               detached: true
+#               buildImages: true
+#               projectName: "nikhil-shop"
+
+#           - task: Bash@3
+#             displayName: "Trivy Scan Docker Images"
+#             inputs:
+#               targetType: "inline"
+#               script: |
+#                 SERVICES="cart-service main-service order-service product-service user-service"
+
+#                 mkdir -p trivy-reports
+
+#                 for SERVICE in $SERVICES
+#                 do
+#                   IMAGE="nikhil-shop-$SERVICE:$(IMAGE_TAG)"
+
+#                   echo "==================================="
+#                   echo "Scanning $IMAGE"
+#                   echo "==================================="
+
+#                   trivy image \
+#                     --severity HIGH,CRITICAL \
+#                     --ignore-unfixed \
+#                     --format table \
+#                     --output trivy-reports/$SERVICE.txt \
+#                     "$IMAGE"
+#                   done
+
+#           - task: PublishBuildArtifacts@1
+#             displayName: "Publish Trivy Reports"
+#             inputs:
+#               pathtoPublish: "trivy-reports"
+#               ArtifactName: "Trivy-Reports"
+
+#           - script: |
+#               export AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)
+#               export AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)
+#               export AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION)
+#               aws sts get-caller-identity
+#             displayName: "Verify AWS Credentials"
+
+#           - task: Bash@3
+#             displayName:  'Login to Amazon ECR'
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \
+#                 docker login \
+#                   --username AWS \
+#                   --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
+
+#           - task: Bash@3
+#             displayName: "Tag & Pushing the docker Image to Amazon ECR"
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 SERVICES="cart-service main-service order-service product-service user-service"
+
+#                 for SERVICE in $SERVICES
+#                 do
+
+#                   echo "======================="
+#                   echo "Tagging $SERVICE"
+#                   echo "======================="
+
+#                   docker tag \
+#                     nikhil-shop-$SERVICE:$(IMAGE_TAG) \
+#                     $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/$SERVICE:$(IMAGE_TAG)
+
+#                   echo "========================"
+#                   echo "Pushing $SERVICE"
+#                   echo "========================"
+
+#                   docker push \
+#                   $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/$SERVICE:$(IMAGE_TAG)
+
+#                 done
+
+#                 export AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)
+#                 export AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)
+#                 export AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION)
+
+          # - task: Bash@3
+          #   displayName: "Create Namespace"
+          #   condition: and(succeeded(), ${{ parameters.create_namespace }})
+          #   inputs:
+          #     targetType: "inline"
+          #     script: |
+          #       kubectl create namespace dev
+
+          # - task: Bash@3
+          #   condition: and(succeeded(), ${{ parameters.set_namespace }})
+          #   displayName: "Set Namespace"
+          #   inputs:
+          #     targetType: "inline"
+          #     script: |
+          #       kubectl config set-context --current --namespace dev
+
+          # - task: Bash@3
+          #   condition: and(succeeded(), ${{ parameters.Deploy_k8s }})
+          #   displayName: "Deployment in Kubernetes"
+          #   inputs:
+          #     targetType: "inline"
+          #     script: |
+          #       kubectl apply -f ./deploy-k8s
+
+          # - task: Bash@3
+          #   displayName: "Namespace for Prometheus & Grafana"
+          #   inputs:
+          #     targetType: "inline"
+          #     script: |
+          #       kubectl create namespace monitoring
+
+trigger:
   - main
 
 pool: Default
@@ -18,7 +252,7 @@ parameters:
     displayName: Docker Image Tag
     type: string
     default: "v1.0.239"
-  
+
   - name: create_namespace
     displayName: Create Namespace
     type: boolean
@@ -34,7 +268,6 @@ parameters:
     type: boolean
     default: false
 
-
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
 
@@ -45,13 +278,15 @@ variables:
   #   value: "v1.0.$(Build.BuildId)"
 
   - ${{ if eq(parameters.image_tag, '') }}:
-    - name: IMAGE_TAG
-      value: "v1.0.$(Build.BuildId)"
+      - name: IMAGE_TAG
+        value: "v1.0.$(Build.BuildId)"
   - ${{ else }}:
-    - name: IMAGE_TAG
-      value: "${{ parameters.image_tag }}"
+      - name: IMAGE_TAG
+        value: "${{ parameters.image_tag }}"
 
   - group: AWS-CREDENTIALS
+
+  - group: Git-Hub Credentials
 
 stages:
   - stage: Build
@@ -162,9 +397,9 @@ stages:
             displayName: "Verify AWS Credentials"
 
           - task: Bash@3
-            displayName:  'Login to Amazon ECR'
+            displayName: "Login to Amazon ECR"
             inputs:
-              targetType: 'inline'
+              targetType: "inline"
               script: |
                 aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \
                 docker login \
@@ -174,13 +409,13 @@ stages:
           - task: Bash@3
             displayName: "Tag & Pushing the docker Image to Amazon ECR"
             inputs:
-              targetType: 'inline'
+              targetType: "inline"
               script: |
                 SERVICES="cart-service main-service order-service product-service user-service"
 
                 for SERVICE in $SERVICES
                 do 
-              
+
                   echo "======================="
                   echo "Tagging $SERVICE"
                   echo "======================="
@@ -197,41 +432,65 @@ stages:
                   $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/$SERVICE:$(IMAGE_TAG)
 
                 done
-                
+
                 export AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)
                 export AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)
                 export AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION)
 
           - task: Bash@3
-            displayName: "Create Namespace"
-            condition: and(succeeded(), ${{ parameters.create_namespace }})
+            displayName:  "Clone gitOps Repository"
             inputs:
               targetType: "inline"
               script: |
-                kubectl create namespace dev
+
+                git clone https://$(GITHUB_PAT)@github.com/opsbyNikhil/microservices-ecommerce-k8s.git gitops
+
+                cd gitops
+
+                git config user.name "$(GIT_USER_NAME)"
+                git config user.email "$(GIT_USER_EMAIL)"
 
           - task: Bash@3
-            condition: and(succeeded(), ${{ parameters.set_namespace }})
-            displayName: "Set Namespace"
+            displayName: "Install yq"
             inputs:
               targetType: "inline"
               script: |
-                kubectl config set-context --current --namespace dev
-          
-          - task: Bash@3
-            condition: and(succeeded(), ${{ parameters.Deploy_k8s }})
-            displayName: "Deployment in Kubernetes"
-            inputs:
-              targetType: "inline"
-              script: |
-                kubectl apply -f ./deploy-k8s
-          
-          - task: Bash@3
-            displayName: "Namespace for Prometheus & Grafana"
-            inputs:
-              targetType: "inline"
-              script: |
-                kubectl create namespace monitoring
-          
+                sudo wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+                  -O /usr/local/bin/yq
+                
+                sudo chmod +x /usr/local/bin/yq
 
-        
+                yq --version
+
+          - task: Bash@3
+            displayName: "Update Deployment"
+            inputs:
+              targetType:
+              script: |
+                cd gitops
+
+                SERVICES="cart-service main-service order-service product-service user-service"
+
+                for SERVICE in $SERVICES
+                do 
+
+                  IMAGE="$(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com/$SERVICE:$(IMAGE_TAG)"
+
+                  echo "Updating $SERVICE"
+
+                  yq -i \
+                  ".spec.template.spec.containers[0].image = \"$IMAGE\"" \
+                  deploy-k8s/$SERVICE/deployment-$SERVICE.yaml
+                
+                done
+
+          - task: Bash@3
+            displayName: "Commit & Push GitOps Repository"
+            inputs:
+              targetType: "inline"
+              script: |
+                cd gitops
+                git remote set-url origin https://$(GITHUB_PAT)@github.com/opsbyNikhil/microservices-ecommerce-k8s.git
+                git add .
+                git commit -m "updated images to $(IMAGE_TAG)" || echo "No changed detected"
+                git push https://$(GITHUB_PAT)@github.com/opsbyNikhil/microservices-ecommerce-k8s.git HEAD:main
