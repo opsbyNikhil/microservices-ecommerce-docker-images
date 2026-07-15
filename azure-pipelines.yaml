@@ -198,7 +198,7 @@ stages:
             inputs:
               targetType: "inline"
               script: |
-                kubectl config set-context --current namespace=dev
+                kubectl config set-context --current --namespace dev
           
           - task: Bash@3
             displayName: "Deployment in Kubernetes"
