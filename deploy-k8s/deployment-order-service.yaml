@@ -26,7 +26,7 @@ spec:
         app: order-service-app
     spec:
       containers:
-        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/order-service:$(IMAGE_TAG)
+        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/order-service:v1.0.239
           name: order-service
           imagePullPolicy: Always
           readinessProbe:
