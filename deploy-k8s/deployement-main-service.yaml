@@ -26,7 +26,7 @@ spec:
         app: main-service-app
     spec:
       containers:
-        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/main-service:v1.0.55
+        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/main-service:$(IMAGE_TAG)
           name: main-service
           imagePullPolicy: Always
           readinessProbe:

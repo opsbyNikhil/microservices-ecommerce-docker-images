@@ -26,7 +26,7 @@ spec:
         app: user-service-app
     spec:
       containers:
-        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/user-service:v1.0.55
+        - image: 984912521466.dkr.ecr.ap-south-1.amazonaws.com/user-service:$(IMAGE_TAG)
           name: user-service
           imagePullPolicy: Always
           readinessProbe:
