@@ -24,6 +24,16 @@ parameters:
     type: boolean
     default: false
 
+  - name: set_namespace
+    displayName: Set Namespace
+    type: boolean
+    default: false
+
+  - name: Deploy_k8s
+    displayName: Deployment in Kubernetes
+    type: boolean
+    default: false
+
 
 variables:
   - group: Nikhil-Shop-Sonar-Credentails
@@ -201,6 +211,7 @@ stages:
                 kubectl create namespace dev
 
           - task: Bash@3
+            condition: and(succeeded(), ${{ parameters.set_namespace }})
             displayName: "Set Namespace"
             inputs:
               targetType: "inline"
@@ -208,11 +219,19 @@ stages:
                 kubectl config set-context --current --namespace dev
           
           - task: Bash@3
+            condition: and(succeeded(), ${{ parameters.Deploy_k8s }})
             displayName: "Deployment in Kubernetes"
             inputs:
               targetType: "inline"
               script: |
                 kubectl apply -f ./deploy-k8s
+          
+          - task: Bash@3
+            displayName: "Namespace for Prometheus & Grafana"
+            inputs:
+              targetType: "inline"
+              script: |
+                kubectl create namespace monitoring
           
 
         
